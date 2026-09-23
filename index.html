@@ -1566,31 +1566,65 @@ textarea.prompt.note{font-family:var(--sans);font-size:1rem;background:var(--sur
   }
 
   // ================= EXPORT / IMPORT =================
+  // Format: KFL2z:<Länge>:<Base64>.   (z = komprimiert)   bzw. KFL2:<Länge>:<Base64>.
+  // Die Länge erkennt abgeschnittene Codes, der Punkt markiert das Ende.
   var KEYS = { disg:"disg-onboarding-v1", gaben:"gabentest-onboarding-v1", traum:"traum-onboarding-v1", summary:"ob-summary-v1" };
-  var PREFIX = "KFL1:";
-  function b64enc(str){ return btoa(unescape(encodeURIComponent(str))); }
-  function b64dec(str){ return decodeURIComponent(escape(atob(str))); }
+  var CAN_ZIP = typeof CompressionStream === "function" && typeof DecompressionStream === "function";
+
+  function bytesToB64(bytes){ var s = ""; for (var i=0;i<bytes.length;i+=0x8000) s += String.fromCharCode.apply(null, bytes.subarray(i,i+0x8000)); return btoa(s); }
+  function b64ToBytes(b64){ var s = atob(b64), out = new Uint8Array(s.length); for (var i=0;i<s.length;i++) out[i] = s.charCodeAt(i); return out; }
+  function streamBytes(bytes, stream){ return new Response(new Blob([bytes]).stream().pipeThrough(stream)).arrayBuffer().then(function(b){ return new Uint8Array(b); }); }
+
+  function makeCode(obj){
+    var bytes = new TextEncoder().encode(JSON.stringify(obj));
+    var p = CAN_ZIP ? streamBytes(bytes, new CompressionStream("deflate-raw")) : Promise.resolve(bytes);
+    return p.then(function(b){ var b64 = bytesToB64(b); return (CAN_ZIP ? "KFL2z:" : "KFL2:") + b64.length + ":" + b64 + "."; });
+  }
+  function importError(kind, extra){ var e = new Error(kind); e.kind = kind; e.extra = extra; return e; }
+
+  function readCode(text){
+    text = String(text||"").replace(/^\uFEFF/,"").trim();
+    if (!text) return Promise.reject(importError("empty"));
+    if (text.charAt(0)==="{"){ try{ return Promise.resolve(JSON.parse(text)); }catch(e){ return Promise.reject(importError("broken")); } }
+    var m = /KFL(2z|2|1)\s*:/i.exec(text);
+    if (!m) return Promise.reject(importError("nocode"));
+    var ver = m[1].toLowerCase(), rest = text.slice(m.index + m[0].length), b64;
+    if (ver === "1"){
+      b64 = rest.replace(/[^A-Za-z0-9+/=]/g,"");
+    } else {
+      var lm = /^\s*(\d+)\s*:/.exec(rest);
+      if (!lm) return Promise.reject(importError("broken"));
+      var need = parseInt(lm[1],10), body = rest.slice(lm[0].length), got = "";
+      for (var i=0;i<body.length && got.length<need;i++){
+        var ch = body.charAt(i);
+        if (/[A-Za-z0-9+/=]/.test(ch)) got += ch;
+        else if (ch==="-") got += "+"; else if (ch==="_") got += "/";
+        else if (ch==="." ) break;
+        else if (/[\s>]/.test(ch)) continue;          // Zeilenumbrüche, E-Mail-Zitatzeichen
+        else break;
+      }
+      if (got.length < need) return Promise.reject(importError("short", need - got.length));
+      b64 = got;
+    }
+    var bytes;
+    try{ bytes = b64ToBytes(b64); }catch(e){ return Promise.reject(importError("broken")); }
+    var p;
+    if (ver === "2z"){
+      if (!CAN_ZIP) return Promise.reject(importError("oldbrowser"));
+      p = streamBytes(bytes, new DecompressionStream("deflate-raw"));
+    } else p = Promise.resolve(bytes);
+    return p.then(function(b){
+      var obj = JSON.parse(new TextDecoder().decode(b));
+      if (!obj || obj.app!=="kfl-onboarding" || !obj.data) throw importError("nocode");
+      return obj;
+    }).catch(function(e){ throw e.kind ? e : importError("broken"); });
+  }
+
   function exportData(){
-    return { app:"kfl-onboarding", v:1, date:new Date().toISOString(), data:{
+    return { app:"kfl-onboarding", v:2, date:new Date().toISOString(), data:{
       disg: window.OB_DISG.state(), gaben: window.OB_GABEN.state(), traum: window.OB_TRAUM.state(), summary: B } };
   }
-  function hasProgress(){
-    var st = status();
-    return st.disg!=="new" || st.gaben!=="new" || st.traum!=="new";
-  }
-  function parseImport(text){
-    text = (text||"").trim();
-    if (!text) throw new Error("empty");
-    var obj;
-    if (text.charAt(0)==="{") obj = JSON.parse(text);
-    else {
-      var code = text.replace(/\s+/g,"");
-      if (code.indexOf(PREFIX)===0) code = code.slice(PREFIX.length);
-      obj = JSON.parse(b64dec(code));
-    }
-    if (!obj || obj.app!=="kfl-onboarding" || !obj.data) throw new Error("invalid");
-    return obj;
-  }
+  function hasProgress(){ var st = status(); return st.disg!=="new" || st.gaben!=="new" || st.traum!=="new"; }
   function applyImport(obj){
     var d = obj.data;
     try{
@@ -1603,6 +1637,15 @@ textarea.prompt.note{font-family:var(--sans);font-size:1rem;background:var(--sur
     return true;
   }
   function fmtDate(iso){ try{ return new Date(iso).toLocaleDateString("de-DE",{day:"numeric",month:"long",year:"numeric"}); }catch(e){ return ""; } }
+  function errText(e){
+    switch (e && e.kind){
+      case "empty": return "Bitte füge zuerst deinen Code ein.";
+      case "nocode": return "Das sieht nicht nach einem Sicherungscode aus. Dein Code beginnt mit „KFL2“.";
+      case "short": return "Der Code ist unvollständig – es fehlen " + e.extra + " Zeichen. Beim Kopieren oder Versenden wurde wohl etwas abgeschnitten. Kopiere ihn am besten noch einmal mit dem Button „Code kopieren“ oder nutze die Datei.";
+      case "oldbrowser": return "Dein Browser ist zu alt, um den Code zu lesen. Bitte aktualisiere ihn oder öffne die Seite in einem anderen Browser.";
+      default: return "Der Code ist beschädigt. Kopiere ihn bitte noch einmal vollständig – am besten mit dem Button „Code kopieren“ – oder nutze die Datei.";
+    }
+  }
 
   function showExport(){
     var panel = el("x-panel"); panel.innerHTML = "";
@@ -1610,55 +1653,57 @@ textarea.prompt.note{font-family:var(--sans);font-size:1rem;background:var(--sur
       panel.appendChild(h("div",{class:"xpanel"},[h("p",{style:"margin:0",text:"Du hast auf diesem Gerät noch keine Antworten gespeichert. Starte zuerst einen Test – oder lade Ergebnisse von einem anderen Gerät."})]));
       return;
     }
-    var json = JSON.stringify(exportData());
-    var code = PREFIX + b64enc(json);
-    var fname = "onboarding-ergebnisse-" + new Date().toISOString().slice(0,10) + ".txt";
-    var dl = h("button",{class:"btn small",type:"button",text:"Als Datei speichern"});
-    var dlNote = h("p",{class:"small muted",style:"margin:8px 0 0"});
-    dl.addEventListener("click",function(){
-      try{
-        var blob = new Blob([code],{type:"text/plain"});
-        var url = URL.createObjectURL(blob);
-        var a = document.createElement("a"); a.href = url; a.download = fname;
-        document.body.appendChild(a); a.click(); a.remove();
-        setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
-        dlNote.textContent = "Falls kein Download startet, nutze einfach den Code unten.";
-      }catch(e){ dlNote.textContent = "Der Download hat nicht geklappt – nutze bitte den Code unten."; }
+    var box = h("div",{class:"xpanel"},[h("p",{style:"margin:0",class:"muted small",text:"Sicherung wird erstellt …"})]);
+    panel.appendChild(box);
+    makeCode(exportData()).then(function(code){
+      box.innerHTML = "";
+      var fname = "onboarding-ergebnisse-" + new Date().toISOString().slice(0,10) + ".txt";
+      var dl = h("button",{class:"btn small",type:"button",text:"Als Datei speichern"});
+      var dlNote = h("p",{class:"small muted",style:"margin:8px 0 0"});
+      dl.addEventListener("click",function(){
+        try{
+          var url = URL.createObjectURL(new Blob([code],{type:"text/plain"}));
+          var a = document.createElement("a"); a.href = url; a.download = fname;
+          document.body.appendChild(a); a.click(); a.remove();
+          setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
+          dlNote.textContent = "Falls kein Download startet, nutze einfach den Code unten.";
+        }catch(e){ dlNote.textContent = "Der Download hat nicht geklappt – nutze bitte den Code unten."; }
+      });
+      var ta = h("textarea",{class:"prompt",readonly:true,rows:"4","aria-label":"Dein Sicherungscode"}); ta.value = code;
+      var cp = h("button",{class:"btn small ghost",type:"button",text:"Code kopieren"});
+      cp.addEventListener("click",function(){
+        function ok(){ cp.textContent = "Kopiert ✓"; setTimeout(function(){ cp.textContent = "Code kopieren"; }, 2200); }
+        function fb(){ try{ ta.focus(); ta.select(); ta.setSelectionRange(0, ta.value.length); if (document.execCommand("copy")) { ok(); return; } }catch(e){} cp.textContent = "Bitte Code markieren und kopieren"; }
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(code).then(ok, fb); else fb();
+      });
+      box.appendChild(h("h3",{text:"Ergebnisse sichern"}));
+      box.appendChild(h("p",{class:"small",text:"Wähle eine der beiden Möglichkeiten und schick dir die Sicherung z. B. per E-Mail, Messenger oder AirDrop. Auf dem neuen Gerät öffnest du diese Seite und tippst auf „Ergebnisse laden“."}));
+      box.appendChild(h("div",{class:"xopt"},[h("div",{class:"xoptt",text:"1. Als Datei"}), dl, dlNote]));
+      box.appendChild(h("div",{class:"xopt"},[h("div",{class:"xoptt",text:"2. Als Code (" + code.length + " Zeichen)"}), cp, ta,
+        h("p",{class:"small muted",style:"margin:8px 0 0",text:"Tipp: Kopiere den Code immer mit dem Button – dann ist er garantiert vollständig. Er endet mit einem Punkt."})]));
+      box.appendChild(h("p",{class:"small muted",style:"margin:12px 0 0",text:"Die Sicherung enthält deine persönlichen Antworten. Teile sie nur mit Menschen, denen du vertraust."}));
     });
-    var ta = h("textarea",{class:"prompt",readonly:true,rows:"4","aria-label":"Dein Sicherungscode"}); ta.value = code;
-    var cp = h("button",{class:"btn small ghost",type:"button",text:"Code kopieren"});
-    cp.addEventListener("click",function(){
-      function ok(){ cp.textContent = "Kopiert ✓"; setTimeout(function(){ cp.textContent = "Code kopieren"; }, 2200); }
-      function fb(){ try{ ta.focus(); ta.select(); ta.setSelectionRange(0, ta.value.length); if (document.execCommand("copy")) { ok(); return; } }catch(e){} cp.textContent = "Bitte Code markieren und kopieren"; }
-      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(code).then(ok, fb); else fb();
-    });
-    panel.appendChild(h("div",{class:"xpanel"},[
-      h("h3",{text:"Ergebnisse sichern"}),
-      h("p",{class:"small",text:"Wähle eine der beiden Möglichkeiten und schick dir die Sicherung z. B. per E-Mail oder Messenger. Auf dem neuen Gerät öffnest du diese Seite und tippst auf „Ergebnisse laden“."}),
-      h("div",{class:"xopt"},[h("div",{class:"xoptt",text:"1. Als Datei"}), dl, dlNote]),
-      h("div",{class:"xopt"},[h("div",{class:"xoptt",text:"2. Als Code (funktioniert immer)"}), cp, ta]),
-      h("p",{class:"small muted",style:"margin:12px 0 0",text:"Die Sicherung enthält deine persönlichen Antworten. Teile sie nur mit Menschen, denen du vertraust."})
-    ]));
   }
 
   function showImport(){
     var panel = el("x-panel"); panel.innerHTML = "";
     var msg = h("p",{class:"small",style:"margin:10px 0 0","aria-live":"polite"});
-    var ta = h("textarea",{class:"prompt",rows:"4",placeholder:"Code hier einfügen (beginnt mit KFL1:) …","aria-label":"Sicherungscode einfügen"});
+    var ta = h("textarea",{class:"prompt",rows:"4",placeholder:"Code hier einfügen (beginnt mit KFL2) …","aria-label":"Sicherungscode einfügen",autocapitalize:"off",autocorrect:"off",spellcheck:"false"});
     var file = h("input",{type:"file",accept:".txt,.json,text/plain,application/json",class:"xfile","aria-label":"Sicherungsdatei auswählen"});
+    function fail(e){ msg.textContent = errText(e); msg.className = "small xerr"; }
     function tryLoad(text){
-      var obj;
-      try{ obj = parseImport(text); }
-      catch(e){ msg.textContent = "Das hat leider nicht geklappt. Prüfe, ob du den vollständigen Code bzw. die richtige Datei verwendest."; msg.className="small xerr"; return; }
-      var when = obj.date ? " vom " + fmtDate(obj.date) : "";
-      if (hasProgress() && !confirm("Sicherung" + when + " laden?\n\nDeine bisherigen Antworten auf diesem Gerät werden dabei ersetzt.")) return;
-      if (!applyImport(obj)){ msg.textContent = "Dein Browser erlaubt das Speichern gerade nicht (z. B. im privaten Modus). Öffne die Seite in einem normalen Browserfenster und versuch es erneut."; msg.className="small xerr"; }
+      msg.textContent = ""; msg.className = "small";
+      readCode(text).then(function(obj){
+        var when = obj.date ? " vom " + fmtDate(obj.date) : "";
+        if (hasProgress() && !confirm("Sicherung" + when + " laden?\n\nDeine bisherigen Antworten auf diesem Gerät werden dabei ersetzt.")) return;
+        if (!applyImport(obj)){ msg.textContent = "Dein Browser erlaubt das Speichern gerade nicht (z. B. im privaten Modus). Öffne die Seite in einem normalen Browserfenster und versuch es erneut."; msg.className = "small xerr"; }
+      }, fail);
     }
     file.addEventListener("change",function(){
       var f = file.files && file.files[0]; if (!f) return;
       var r = new FileReader();
       r.onload = function(){ tryLoad(String(r.result||"")); };
-      r.onerror = function(){ msg.textContent = "Die Datei konnte nicht gelesen werden."; msg.className="small xerr"; };
+      r.onerror = function(){ msg.textContent = "Die Datei konnte nicht gelesen werden."; msg.className = "small xerr"; };
       r.readAsText(f);
     });
     var go = h("button",{class:"btn small",type:"button",text:"Code laden",onclick:function(){ tryLoad(ta.value); }});
@@ -1666,7 +1711,9 @@ textarea.prompt.note{font-family:var(--sans);font-size:1rem;background:var(--sur
       h("h3",{text:"Ergebnisse laden"}),
       h("p",{class:"small",text:"Lade deine Sicherung von einem anderen Gerät. Danach kannst du genau dort weitermachen, wo du aufgehört hast."}),
       h("div",{class:"xopt"},[h("div",{class:"xoptt",text:"1. Datei auswählen"}), file]),
-      h("div",{class:"xopt"},[h("div",{class:"xoptt",text:"2. Oder Code einfügen"}), ta, h("div",{style:"margin-top:10px"},[go])]),
+      h("div",{class:"xopt"},[h("div",{class:"xoptt",text:"2. Oder Code einfügen"}), ta,
+        h("p",{class:"small muted",style:"margin:6px 0 0",text:"Du kannst auch die ganze Nachricht einfügen, in der der Code steht – er wird automatisch herausgesucht."}),
+        h("div",{style:"margin-top:10px"},[go])]),
       msg
     ]));
   }
