@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Onboarding – Deine Berufung</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f2f2f2; --surface:#ffffff; --ink:#2e2e2e; --muted:#6b6b6b;
+  --green:#465a47; --green-ink:#ffffff; --gold:#b49c78; --gold-soft:rgba(180,156,120,.18);
+  --line:#2e2e2e; --line-soft:#d6d6d6;
+  --serif:"Playfair Display", "Didot", "Bodoni 72", Georgia, serif;
+  --sans:"Poppins", "Segoe UI", system-ui, -apple-system, sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1c1f1c; --surface:#262a26; --ink:#ececec; --muted:#a9a9a9;
+    --green:#6f8a70; --green-ink:#10140f; --gold:#c9b28d; --gold-soft:rgba(201,178,141,.2);
+    --line:#ececec; --line-soft:#444a44;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1c1f1c; --surface:#262a26; --ink:#ececec; --muted:#a9a9a9;
+  --green:#6f8a70; --green-ink:#10140f; --gold:#c9b28d; --gold-soft:rgba(201,178,141,.2);
+  --line:#ececec; --line-soft:#444a44;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 20px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+main{max-width:720px;margin:0 auto;padding:32px 20px 56px}
+h1{font-family:var(--serif);font-weight:500;font-size:clamp(2.2rem,7vw,3.4rem);line-height:1.05;letter-spacing:.02em;margin:0 0 20px}
+h2{font-family:var(--serif);font-weight:500;font-size:1.6rem;line-height:1.2;margin:32px 0 12px}
+p{margin:0 0 14px;max-width:62ch}
+.muted{color:var(--muted)}
+button{font:inherit;cursor:pointer}
+.btn{border:0;border-radius:999px;padding:13px 26px;font-weight:600;font-size:1rem;background:var(--green);color:var(--green-ink)}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--line-soft)}
+.btn:focus-visible,.opt:focus-visible,.link:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.link{background:none;border:0;color:var(--muted);text-decoration:underline;padding:6px 0;font-size:.95rem}
+.hidden{display:none!important}
+.how{background:var(--surface);border-radius:14px;padding:20px 22px;margin:22px 0 28px}
+.how ol{margin:8px 0 0;padding-left:1.2em}
+.how li{margin-bottom:6px}
+.nav{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.nav .right{display:flex;gap:10px;margin-left:auto}
+
+/* Intro */
+.title-big{font-family:var(--serif);font-weight:700;font-size:clamp(3.2rem,14vw,6.2rem);line-height:.95;letter-spacing:.01em;margin:0 0 22px}
+.meta{display:flex;gap:28px;margin:0 0 20px;flex-wrap:wrap}
+.meta div{font-size:.9rem;color:var(--muted)}
+.meta strong{display:block;font-family:var(--serif);font-size:1.8rem;color:var(--ink);font-weight:700;line-height:1.1}
+
+/* Quiz */
+.progress{height:6px;background:var(--line-soft);border-radius:99px;overflow:hidden;margin-bottom:10px}
+.progress i{display:block;height:100%;background:var(--green);width:0;transition:width .3s}
+.phead{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:18px;font-size:.92rem;color:var(--muted)}
+.phead .pg{font-family:var(--serif);font-size:1.4rem;color:var(--ink)}
+.special{background:var(--gold-soft);border-radius:14px;padding:18px 20px;margin-bottom:20px}
+.special h3{margin:0 0 6px;font-family:var(--serif);font-weight:500;font-size:1.35rem}
+.special p{margin:0;font-size:.97rem}
+.q{background:var(--surface);border-radius:14px;padding:18px 18px 16px;margin-bottom:14px;border:1.5px solid transparent;transition:border-color .2s}
+.q.missing{border-color:var(--gold)}
+.q .t{display:flex;gap:12px;margin:0 0 14px}
+.q .n{flex:none;font-family:var(--serif);font-weight:700;color:var(--gold);min-width:2.2em}
+.opts{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.opt{border:1.5px solid var(--line-soft);background:transparent;color:var(--ink);border-radius:10px;padding:10px 2px;font-size:.8rem;font-weight:500;line-height:1.2;min-height:48px}
+.opt:hover{border-color:var(--gold)}
+.opt[aria-checked="true"]{background:var(--green);border-color:var(--green);color:var(--green-ink)}
+.scale-hint{display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);margin:-6px 2px 14px}
+
+/* Result */
+.top5{list-style:none;padding:0;margin:18px 0 10px;counter-reset:r}
+.top5 li{display:grid;grid-template-columns:auto 1fr;gap:4px 18px;background:var(--surface);border-radius:14px;padding:18px 20px;margin-bottom:12px;counter-increment:r;align-items:start}
+.top5 .rk{grid-row:span 3;font-family:var(--serif);font-weight:700;font-size:2.6rem;line-height:1;color:var(--green);min-width:1.1em}
+.top5 .rk::before{content:counter(r)}
+.top5 h3{margin:0;font-size:1.15rem;font-weight:600}
+.top5 .sc{font-size:.85rem;color:var(--muted)}
+.top5 p{margin:4px 0 0;color:var(--muted);font-size:.97rem}
+.star{background:var(--green);color:var(--green-ink);border-radius:14px;padding:18px 20px;margin:14px 0 6px}
+.star h3{margin:0 0 4px;font-family:var(--serif);font-weight:500;font-size:1.35rem}
+.star p{margin:0;opacity:.9;font-size:.97rem}
+.allbars{background:var(--surface);border-radius:14px;padding:14px 18px}
+.row{display:grid;grid-template-columns:1.6em minmax(0,11em) 1fr 2.4em;gap:10px;align-items:center;padding:6px 0;font-size:.92rem}
+.row .l{font-family:var(--serif);font-weight:700;color:var(--muted)}
+.row.top .l{color:var(--green)}
+.row .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .b{height:8px;background:var(--line-soft);border-radius:99px;overflow:hidden}
+.row .b i{display:block;height:100%;background:var(--gold)}
+.row.top .b i{background:var(--green)}
+.row .v{text-align:right;font-weight:600}
+.sub{font-size:.85rem;color:var(--muted);margin:14px 0 4px}
+/* DISG */
+.letters{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:8px 0 28px;max-width:420px}
+.letters span{font-family:var(--serif);font-weight:700;font-size:clamp(3.2rem,12vw,5rem);line-height:1}
+.letters small{display:block;font-family:var(--sans);font-weight:600;font-size:.72rem;color:var(--muted);margin-top:6px;letter-spacing:.03em}
+.how{background:var(--surface);border-radius:14px;padding:20px 22px;margin:22px 0 28px}
+.how ol{margin:8px 0 0;padding-left:1.2em}
+.how li{margin-bottom:6px}
+
+/* Question */
+.progress{height:6px;background:var(--line-soft);border-radius:99px;overflow:hidden;margin-bottom:22px}
+.progress i{display:block;height:100%;background:var(--green);width:0;transition:width .3s}
+.qhead{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:6px}
+.qnum{font-family:var(--serif);font-size:1.5rem}
+.hint{min-height:3.2em}
+.words{display:grid;gap:12px;margin:14px 0 24px}
+.word{display:flex;align-items:center;justify-content:space-between;gap:14px;width:100%;text-align:left;background:var(--surface);color:var(--ink);border:1.5px solid var(--line-soft);border-radius:14px;padding:18px 18px 18px 22px;font-size:1.15rem;font-weight:500;transition:border-color .15s, background .15s}
+.word:hover{border-color:var(--gold)}
+.word.ranked{border-color:var(--green);background:var(--gold-soft)}
+.badge{flex:none;min-width:92px;text-align:center;border-radius:99px;padding:5px 12px;font-size:.82rem;font-weight:600;color:var(--muted);box-shadow:inset 0 0 0 1.5px var(--line-soft)}
+.word.ranked .badge{background:var(--green);color:var(--green-ink);box-shadow:none}
+.nav{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.nav .right{display:flex;gap:10px;margin-left:auto}
+
+/* Result */
+.chart-wrap{background:var(--surface);border-radius:16px;padding:12px;margin:18px 0 26px}
+.chart-wrap svg{display:block;width:100%;height:auto}
+.scores{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:28px}
+.score{background:var(--surface);border-radius:14px;padding:16px 18px}
+.score .top{display:flex;align-items:baseline;justify-content:space-between}
+.score .l{font-family:var(--serif);font-size:2rem;font-weight:700;line-height:1}
+.score .v{font-size:1.4rem;font-weight:700}
+.score .n{font-size:.9rem;color:var(--muted);margin-top:2px}
+.bar{height:6px;background:var(--line-soft);border-radius:99px;margin-top:10px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--gold)}
+.score.lead .bar i{background:var(--green)}
+.types{display:grid;gap:14px;margin-bottom:30px}
+.type{border-left:4px solid var(--line-soft);padding:4px 0 4px 16px}
+.type.lead{border-color:var(--green)}
+.type h3{margin:0 0 4px;font-size:1.05rem;font-weight:600}
+.type p{margin:0;color:var(--muted);font-size:.98rem}
+
+/* Traum */
+
+.sym{display:inline-block;width:1.2em;text-align:center;color:var(--gold);font-weight:700}
+.steps3{display:grid;gap:12px;margin:18px 0}
+.steps3 div{display:grid;grid-template-columns:2.2em 1fr;gap:10px;align-items:baseline}
+.steps3 b{font-family:var(--serif);font-size:1.6rem;color:var(--gold);line-height:1}
+
+/* Fragen / Chips */
+.questions{margin:0;padding-left:1.1em;color:var(--muted);font-size:.97rem}
+.questions li{margin-bottom:4px}
+.group{margin:22px 0 0}
+.group h3{font-size:.88rem;color:var(--muted);font-weight:600;margin-bottom:10px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1.5px solid var(--line-soft);background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 15px;font-size:.93rem;font-weight:500;line-height:1.3}
+.chip:hover{border-color:var(--gold)}
+.chip[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:var(--green-ink)}
+.addrow{display:flex;gap:8px;margin-top:22px}
+.addrow input{flex:1}
+.selcount{font-size:.9rem;color:var(--muted);margin-top:14px}
+
+/* Top 3 */
+.slots{display:grid;gap:10px;margin:14px 0 6px}
+.slot{display:grid;grid-template-columns:2em 1fr;gap:10px;align-items:center}
+.slot b{font-family:var(--serif);font-size:1.6rem;color:var(--green);text-align:center}
+
+/* Muster */
+.method{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:14px 0}
+.method .card{margin:0}
+.method .icon{font-size:1.8rem;color:var(--gold);line-height:1;margin-bottom:8px}
+.recap{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.recap .card{margin:0;padding:16px 18px}
+.recap ol{margin:0;padding-left:1.2em;font-size:.95rem}
+.slotpick{margin:24px 0}
+.slotpick h3{display:flex;gap:8px;align-items:baseline;font-size:1.05rem}
+.slotpick .sym{font-size:1.1rem}
+.picks{display:grid;gap:8px;margin:10px 0}
+.pick{text-align:left;border:1.5px solid var(--line-soft);background:var(--surface);color:var(--ink);border-radius:12px;padding:12px 16px;font-size:.98rem;line-height:1.4}
+.pick:hover{border-color:var(--gold)}
+.pick[aria-checked="true"]{border-color:var(--green);background:var(--gold-soft);font-weight:500}
+.status{display:flex;align-items:center;gap:12px;padding:16px 18px;background:var(--gold-soft);border-radius:12px;margin:16px 0;font-size:.95rem}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--gold);flex:none;animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.25}}
+.err{background:var(--surface);border:1.5px solid var(--gold);border-radius:12px;padding:14px 16px;margin:16px 0;font-size:.95rem}
+
+/* Vision */
+.combo{margin:26px 0}
+.combo .tag{font-size:.85rem;color:var(--muted);margin-bottom:8px}
+.sentence{font-family:var(--serif);font-size:1.15rem;line-height:1.45}
+.favorite{background:var(--green);color:var(--green-ink);border-radius:16px;padding:26px 24px;margin:18px 0}
+.favorite .sentence{font-size:clamp(1.35rem,4.5vw,1.8rem);font-style:italic}
+.favorite .small{opacity:.85;margin-top:10px}
+.sheet{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:.95rem}
+.sheet dt{color:var(--muted)}
+.sheet dd{margin:0;font-weight:500}
+.aibox{background:var(--surface);border-radius:14px;padding:18px 20px;margin:12px 0}
+.aisteps{margin:0 0 14px;padding-left:1.2em;font-size:.95rem}
+.aisteps li{margin-bottom:4px}
+textarea.prompt{display:block;width:100%;margin-top:12px;font:inherit;font-size:.85rem;line-height:1.5;padding:12px 14px;border-radius:10px;border:1.5px solid var(--line-soft);background:var(--bg);color:var(--ink);resize:vertical}
+textarea.prompt.own{font-family:var(--serif);font-size:1.15rem;background:var(--surface)}
+textarea.prompt:focus{outline:none;border-color:var(--green)}
+
+.small{font-size:.9rem}
+input[type=text]{font:inherit;width:100%;padding:12px 14px;border-radius:10px;border:1.5px solid var(--line-soft);background:var(--surface);color:var(--ink)}
+input[type=text]:focus{outline:none;border-color:var(--green)}
+.btn.small{padding:9px 18px;font-size:.92rem}
+.chip:focus-visible,.pick:focus-visible,.modcard:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.card{background:var(--surface);border-radius:14px;padding:20px 22px;margin:18px 0}
+.stepname{font-size:.9rem;color:var(--muted);margin-bottom:18px}
+.aibox{background:var(--surface);border-radius:14px;padding:18px 20px;margin:12px 0}
+.aisteps{margin:0 0 14px;padding-left:1.2em;font-size:.95rem}
+.aisteps li{margin-bottom:4px}
+textarea.prompt{display:block;width:100%;margin-top:12px;font:inherit;font-size:.85rem;line-height:1.5;padding:12px 14px;border-radius:10px;border:1.5px solid var(--line-soft);background:var(--bg);color:var(--ink);resize:vertical}
+textarea.prompt.own{font-family:var(--serif);font-size:1.15rem;background:var(--surface)}
+textarea.prompt:focus{outline:none;border-color:var(--green)}
+
+/* Hinweis & Footer */
+a{color:var(--green);text-underline-offset:3px}
+a:focus-visible{outline:3px solid var(--gold);outline-offset:3px;border-radius:4px}
+.notice{display:flex;gap:14px;align-items:flex-start;background:var(--gold-soft);border-radius:14px;padding:16px 18px;margin:0 0 20px}
+.notice p{margin:0}
+.notice-icon{flex:none;width:32px;height:32px;border-radius:50%;background:var(--green);color:var(--green-ink);display:grid;place-items:center;font-size:.8rem;margin-top:2px}
+.sitefoot{margin-top:56px;padding-top:24px;border-top:1.5px solid var(--line-soft);font-size:.9rem;color:var(--muted)}
+.sitefoot p{margin:0 0 10px}
+.sitefoot .btn{display:inline-block;text-decoration:none;margin-top:6px}
+.brand{display:flex;align-items:center;gap:14px;margin:0 0 28px}
+.logo-top{height:64px;width:auto;color:var(--muted);flex:none}
+.brand-name{font-weight:600;font-size:.95rem;line-height:1.3;letter-spacing:.02em;color:var(--muted)}
+.brand-name span{font-weight:400}
+.foot-logo{display:inline-flex;align-items:center;gap:10px;color:var(--muted);text-decoration:none;font-weight:600;margin-bottom:14px}
+.logo-foot{height:36px;width:auto;color:var(--muted)}
+.stepper{display:flex;gap:10px;align-items:center;font-size:.88rem;color:var(--muted);margin:0 0 18px;flex-wrap:wrap}
+.stepper span.on{color:var(--ink);font-weight:600}
+.stepper span.done{color:var(--green);font-weight:600}
+textarea.prompt.note{font-family:var(--sans);font-size:1rem;background:var(--surface)}
+.bblock .chips{margin:10px 0 4px}
+.visioncard{background:var(--green);color:var(--green-ink);border-radius:18px;padding:24px 24px 18px;margin:0 0 24px}
+.vhead{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:.82rem;font-weight:600;letter-spacing:.03em;opacity:.85;margin-bottom:12px}
+.vsentence{font-family:var(--serif);font-style:italic;font-size:clamp(1.25rem,4.2vw,1.6rem);line-height:1.4}
+.vnotes{display:grid;gap:12px;margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.25)}
+.vlabel{font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;opacity:.8;margin-bottom:2px}
+.vtext{white-space:pre-line;font-size:.95rem}
+.visioncard .vedit{color:var(--green-ink);opacity:.85;margin-top:10px}
+/* Hub */
+.hubbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:-8px 0 22px;font-size:.88rem;color:var(--muted)}
+.hubbar .link{padding:4px 0}
+.modlist{display:grid;gap:12px;margin:26px 0}
+.modcard{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start;text-align:left;width:100%;background:var(--surface);color:var(--ink);border:1.5px solid transparent;border-radius:16px;padding:20px 22px}
+.modcard:hover{border-color:var(--gold)}
+.modnum{font-family:var(--serif);font-weight:700;font-size:2.6rem;line-height:1;color:var(--gold);min-width:1em;text-align:center}
+.modbody{display:flex;flex-direction:column;gap:4px}
+.modtitle{font-family:var(--serif);font-size:1.5rem;line-height:1.15}
+.moddesc{color:var(--muted);font-size:.95rem}
+.modmeta{display:flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:.82rem;color:var(--muted);margin-top:6px}
+.pill{border-radius:99px;padding:3px 10px;font-weight:600;box-shadow:inset 0 0 0 1.5px var(--line-soft)}
+.pill.done{background:var(--green);color:var(--green-ink);box-shadow:none}
+.pill.progress{background:var(--gold-soft);box-shadow:none;color:var(--ink)}
+.modcard.final{background:var(--green);color:var(--green-ink)}
+.modcard.final .modnum{color:var(--green-ink)}
+.modcard.final .moddesc{color:var(--green-ink);opacity:.85}
+.modcard.final.locked{background:transparent;color:var(--muted);border:1.5px dashed var(--line-soft)}
+.modcard.final.locked .modnum,.modcard.final.locked .moddesc{color:var(--muted)}
+/* Summary */
+.sumcard{margin:14px 0}
+.sumhead{display:flex;align-items:baseline;gap:12px;margin-bottom:8px}
+.sumhead h3{font-family:var(--serif);font-weight:500;font-size:1.4rem;margin:0}
+.sumnum{font-family:var(--serif);font-weight:700;font-size:1.6rem;color:var(--gold)}
+.minibars{display:grid;gap:6px}
+.mb{display:grid;grid-template-columns:1.4em 1fr 2em;gap:10px;align-items:center;font-size:.92rem}
+.mb .l{font-family:var(--serif);font-weight:700;color:var(--muted)}
+.mb .b{height:8px;background:var(--line-soft);border-radius:99px;overflow:hidden}
+.mb .b i{display:block;height:100%;background:var(--gold)}
+.mb.top .l{color:var(--green)} .mb.top .b i{background:var(--green)}
+.mb .v{text-align:right;font-weight:600}
+.sumlist{margin:0;padding-left:1.3em}
+.sumlist li{margin-bottom:3px}
+.builder{display:grid;gap:16px;margin:16px 0}
+.blabel{display:block;font-weight:600;margin-bottom:6px}
+.bfield .small{margin-top:6px}
+.bblock{margin:22px 0}
+.bblock .group{margin-top:10px}
+.bblock .group h3:empty{display:none}
+.chip:disabled{opacity:.4;cursor:not-allowed}
+
+@media (max-width:480px){ .opt{font-size:.72rem;padding:8px 1px} .row{grid-template-columns:1.4em minmax(0,8.5em) 1fr 2.2em} }
+@media (prefers-reduced-motion:reduce){ *{transition:none!important;scroll-behavior:auto!important} }
+
+@media (max-width:520px){ .method,.recap{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+<main>
+  <section id="hub">
+    <div class="brand"><svg class="logo-top" viewBox="0 0 1000 1720" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Kirche für Lippstadt"> <g transform="translate(0.000000,1720.000000) scale(0.100000,-0.100000)" fill="currentColor" stroke="none"> <path d="M4670 17190 c-2360 -170 -4272 -1939 -4614 -4270 -54 -368 -51 -99 -50 -4310 1 -4081 -1 -3967 45 -4300 241 -1742 1396 -3239 3028 -3924 905 -380 1942 -482 2910 -285 2083 422 3689 2141 3960 4239 41 313 41 336 44 4315 2 4107 4 3911 -44 4250 -305 2158 -1996 3881 -4149 4230 -331 53 -820 77 -1130 55z m40 -1419 l0 -839 -87 -12 c-431 -59 -890 -251 -1236 -517 l-59 -46 -599 599 c-329 329 -599 602 -599 606 0 4 50 47 111 95 496 395 1072 681 1675 831 256 64 586 118 737 121 l57 1 0 -839z m946 804 c727 -107 1410 -393 1999 -835 72 -54 150 -116 175 -138 l45 -41 -601 -602 -602 -602 -59 46 c-350 269 -837 470 -1265 522 l-58 7 0 841 0 840 101 -7 c55 -4 174 -18 265 -31z m-2778 -2681 c-271 -355 -460 -805 -519 -1236 l-12 -88 -874 0 -873 0 0 33 c0 116 60 468 120 703 165 647 492 1274 925 1777 l68 79 605 -605 605 -605 -45 -58z m5608 1032 c523 -671 815 -1402 919 -2303 l6 -53 -879 0 -879 0 -12 88 c-58 421 -257 895 -518 1235 l-46 59 604 605 604 604 58 -63 c32 -35 96 -112 143 -172z m-3226 -571 c1048 -130 1830 -1016 1830 -2075 0 -881 -536 -1655 -1361 -1963 -453 -170 -1002 -170 -1456 -1 -572 213 -1024 665 -1237 1236 -143 385 -166 844 -61 1254 259 1013 1239 1678 2285 1549z m-2906 -2424 c46 -408 239 -885 501 -1235 l66 -90 -1170 -1170 -1171 -1171 0 1863 0 1862 884 0 883 0 7 -59z m7066 -2306 l0 -2365 -875 0 -875 0 0 2365 0 2365 875 0 875 0 0 -2365z m-1171 -2935 c826 0 1162 -3 1167 -11 3 -6 3 -339 -1 -741 -7 -666 -9 -729 -24 -725 -9 3 -94 39 -190 81 -622 272 -1214 455 -1610 497 -156 16 -496 6 -667 -20 -480 -74 -886 -211 -1556 -524 l-78 -36 0 2207 0 2208 118 17 c504 73 996 310 1394 671 92 83 265 270 278 299 3 7 6 -873 8 -1955 l2 -1968 1159 0z m-4832 3444 c350 -261 830 -456 1231 -500 l62 -7 0 -2352 0 -2353 -72 -37 c-40 -21 -194 -104 -343 -185 -148 -81 -314 -171 -369 -200 l-98 -53 -1564 1564 -1564 1564 1312 1312 c722 722 1314 1313 1315 1313 0 0 41 -30 90 -66z m-157 -5935 c0 -8 -198 -65 -315 -90 -167 -35 -388 -37 -546 -5 -443 90 -1026 342 -1704 737 l-110 64 -3 990 -2 990 1340 -1340 c737 -737 1340 -1343 1340 -1346z m4375 1001 c406 -70 1028 -285 1637 -566 l128 -58 -5 -36 c-56 -429 -125 -727 -240 -1045 -50 -136 -149 -374 -162 -386 -5 -4 -87 24 -183 62 -927 368 -1494 429 -2251 243 -520 -127 -1313 -477 -2264 -998 -819 -449 -1142 -578 -1544 -618 -232 -22 -495 32 -899 184 l-133 51 -62 71 c-424 486 -747 1090 -917 1715 -40 144 -92 373 -86 378 2 2 45 -20 97 -48 906 -493 1538 -689 2065 -640 519 48 936 210 1769 685 306 175 824 439 1165 594 601 272 1028 400 1465 436 100 8 303 -3 420 -24z m76 -2299 c283 -59 989 -285 989 -316 0 -5 -40 -65 -88 -132 -743 -1039 -1801 -1673 -3077 -1845 -230 -31 -805 -33 -1035 -5 -610 76 -1180 262 -1684 550 l-109 62 129 12 c512 49 909 205 1774 698 271 154 871 458 1165 590 549 247 953 371 1365 419 126 15 428 -3 571 -33z"/> </g> </svg><span class="brand-name">Kirche für Lippstadt<br><span>Onboarding</span></span></div>
+    <div class="title-big">Deine Berufung</div>
+    <div id="visioncard"></div>
+    <div class="notice"><span class="notice-icon" aria-hidden="true">▶</span><p><strong>Bevor du startest:</strong> Schau dir bitte zuerst die Anleitungsvideos zum Onboarding an. Du findest sie unter <a href="https://steps.kirchefuerlippstadt.de" target="_blank" rel="noopener">steps.kirchefuerlippstadt.de</a>.</p></div>
+    <p>Willkommen zum Onboarding! In drei Schritten entdeckst du, wie Gott dich gemacht hat: deine Persönlichkeit, deine Gaben und deinen Traum. Am Ende fügt sich alles zu deinem persönlichen Visionssatz zusammen.</p>
+    <p class="muted small">Du kannst die Tests in beliebiger Reihenfolge und über mehrere Tage verteilt machen – dein Fortschritt bleibt auf diesem Gerät gespeichert.</p>
+    <div class="modlist" id="modlist"></div>
+  </section>
+
+  <section id="m-disg" class="hidden">
+    <div class="hubbar"><button class="link" data-hub>← Übersicht</button><span>Modul 1 · Typ</span></div>
+
+
+  <!-- INTRO -->
+  <section id="d-intro">
+    <h1>Onboarding – Typ</h1>
+    <div class="letters" aria-hidden="true">
+      <div><span>D</span><small>Dominant</small></div>
+      <div><span>I</span><small>Initiativ</small></div>
+      <div><span>S</span><small>Stetig</small></div>
+      <div><span>G</span><small>Gewissenhaft</small></div>
+    </div>
+    <p>Dieser kurze Test zeigt dir, wie du typischerweise denkst, handelst und mit anderen umgehst. Es gibt kein Richtig oder Falsch – jeder Typ bringt wertvolle Stärken mit.</p>
+    <div class="how">
+      <strong>So funktioniert’s</strong>
+      <ol>
+        <li>Du siehst nacheinander 10 Gruppen mit je 4 Begriffen.</li>
+        <li>Tippe die Begriffe in der Reihenfolge an, wie sehr sie auf dich zutreffen – zuerst den, der am meisten passt.</li>
+        <li>Am Ende siehst du dein persönliches Profil als Diagramm.</li>
+      </ol>
+    </div>
+    <p class="muted">Tipp: Antworte spontan und so, wie du wirklich bist – nicht, wie du gern wärst.</p>
+    <div class="nav" style="margin-top:22px">
+      <button class="btn" id="d-startBtn">Test starten</button>
+      <button class="link hidden" id="d-resumeBtn">Weitermachen, wo ich aufgehört habe</button>
+    </div>
+  </section>
+
+  <!-- QUESTION -->
+  <section id="d-quiz" class="hidden">
+    <div class="progress" aria-hidden="true"><i id="d-bar"></i></div>
+    <div class="qhead">
+      <span class="qnum" id="d-qnum">Gruppe 1 von 10</span>
+      <button class="link" id="d-resetRow">Auswahl zurücksetzen</button>
+    </div>
+    <p class="hint muted" id="d-hint" aria-live="polite"></p>
+    <div class="words" id="d-words"></div>
+    <div class="nav">
+      <button class="btn ghost" id="d-backBtn">Zurück</button>
+      <div class="right"><button class="btn" id="d-nextBtn" disabled>Weiter</button></div>
+    </div>
+  </section>
+
+  <!-- RESULT -->
+  <section id="d-result" class="hidden">
+    <h1>Dein Profil</h1>
+    <p id="d-summary"></p>
+    <div class="chart-wrap" id="d-chart"></div>
+    <div class="scores" id="d-scores"></div>
+    <h2>Was die vier Typen ausmacht</h2>
+    <div class="types" id="d-types"></div>
+    <p class="muted">Jeder Mensch hat Anteile aller vier Typen. Dein Profil zeigt, wozu du eher neigst – nicht, was du kannst oder nicht kannst. Sprich gern mit deinem Mentor oder deiner Mentorin über dein Ergebnis.</p>
+    <div class="nav" style="margin-top:22px">
+      <button class="btn ghost" id="d-reviewBtn">Antworten ändern</button>
+      <div class="right"><button class="btn ghost" id="d-restartBtn">Neu starten</button><button class="btn" data-hub>Weiter zur Übersicht</button></div>
+    </div>
+  </section>
+
+
+  </section>
+
+  <section id="m-gaben" class="hidden">
+    <div class="hubbar"><button class="link" data-hub>← Übersicht</button><span>Modul 2 · Talent</span></div>
+
+
+  <section id="g-intro">
+    <div class="title-big">Gaben&shy;test</div>
+    <div class="meta">
+      <div><strong>141</strong>Aussagen</div>
+      <div><strong>ca. 20</strong>Minuten</div>
+      <div><strong>23</strong>mögliche Gaben</div>
+    </div>
+    <p>Gott hat jedem Menschen Gaben geschenkt, mit denen er Gemeinde und Welt bereichern kann. Dieser Test hilft dir, deine stärksten Gaben zu entdecken.</p>
+    <div class="how">
+      <strong>So funktioniert’s</strong>
+      <ol>
+        <li>Lies jede Aussage und wähle aus, wie stark sie auf dich zutrifft – von „nie“ bis „sehr stark“.</li>
+        <li>Die Aussagen sind in kurze Abschnitte aufgeteilt. Du kannst jederzeit pausieren, dein Fortschritt wird auf diesem Gerät gespeichert.</li>
+        <li>Am Ende bekommst du deine Top-5-Gaben und siehst, wie alle Gaben bei dir ausgeprägt sind.</li>
+      </ol>
+    </div>
+    <p><strong>Achtung: Sei ehrlich zu dir!</strong> <span class="muted">Antworte so, wie du wirklich bist – nicht, wie du gern wärst oder wie andere dich sehen möchten.</span></p>
+    <div class="nav" style="margin-top:22px">
+      <button class="btn" id="g-startBtn">Test starten</button>
+      <button class="link hidden" id="g-resumeBtn">Weitermachen, wo ich aufgehört habe</button>
+    </div>
+  </section>
+
+  <section id="g-quiz" class="hidden">
+    <div class="progress" aria-hidden="true"><i id="g-bar"></i></div>
+    <div class="phead"><span class="pg" id="g-pg"></span><span id="g-count"></span></div>
+    <div id="g-special" class="special hidden">
+      <h3>Übernatürliche Geistesgaben</h3>
+      <p>Die letzten 8 Aussagen fragen nach besonderen Erfahrungen. Wenn du so etwas (noch) nicht erlebt hast, wähle einfach „nie“ – das ist völlig in Ordnung und sagt nichts über deinen Glauben aus.</p>
+    </div>
+    <div id="g-qs"></div>
+    <p class="muted hidden" id="g-missingMsg" aria-live="polite">Bitte beantworte noch die markierten Aussagen.</p>
+    <div class="nav" style="margin-top:18px">
+      <button class="btn ghost" id="g-backBtn">Zurück</button>
+      <div class="right"><button class="btn" id="g-nextBtn">Weiter</button></div>
+    </div>
+  </section>
+
+  <section id="g-result" class="hidden">
+    <h1>Deine Gaben</h1>
+    <p>Das sind die fünf Gaben, die bei dir am stärksten ausgeprägt sind.</p>
+    <ol class="top5" id="g-top5"></ol>
+    <p class="muted" id="g-tieNote"></p>
+    <div id="g-starBox"></div>
+
+    <h2>Alle Gaben im Überblick</h2>
+    <div class="allbars" id="g-allbars"></div>
+
+    <h2>Wie geht’s weiter?</h2>
+    <p>Ein Test ist ein Anfang, kein Urteil. Probiere deine Gaben im Alltag und in der Gemeinde aus und frag Menschen, die dich gut kennen, ob sie diese Gaben auch bei dir sehen. Sprich gern mit deinem Mentor oder deiner Mentorin über dein Ergebnis.</p>
+    <div class="nav" style="margin-top:22px">
+      <button class="btn ghost" id="g-reviewBtn">Antworten ändern</button>
+      <div class="right"><button class="btn ghost" id="g-restartBtn">Neu starten</button><button class="btn" data-hub>Weiter zur Übersicht</button></div>
+    </div>
+  </section>
+
+
+  </section>
+
+  <section id="m-traum" class="hidden">
+    <div class="hubbar"><button class="link" data-hub>← Übersicht</button><span>Modul 3 · Traum</span></div>
+<div id="t-app"></div>
+  </section>
+
+  <section id="m-summary" class="hidden">
+    <div class="hubbar"><button class="link" data-hub>← Übersicht</button><span>Gesamtergebnis</span></div>
+<div id="sum-app"></div>
+  </section>
+  <footer class="sitefoot">
+    <a class="foot-logo" href="https://kirchefuerlippstadt.de" target="_blank" rel="noopener"><svg class="logo-foot" viewBox="0 0 1000 1720" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"> <g transform="translate(0.000000,1720.000000) scale(0.100000,-0.100000)" fill="currentColor" stroke="none"> <path d="M4670 17190 c-2360 -170 -4272 -1939 -4614 -4270 -54 -368 -51 -99 -50 -4310 1 -4081 -1 -3967 45 -4300 241 -1742 1396 -3239 3028 -3924 905 -380 1942 -482 2910 -285 2083 422 3689 2141 3960 4239 41 313 41 336 44 4315 2 4107 4 3911 -44 4250 -305 2158 -1996 3881 -4149 4230 -331 53 -820 77 -1130 55z m40 -1419 l0 -839 -87 -12 c-431 -59 -890 -251 -1236 -517 l-59 -46 -599 599 c-329 329 -599 602 -599 606 0 4 50 47 111 95 496 395 1072 681 1675 831 256 64 586 118 737 121 l57 1 0 -839z m946 804 c727 -107 1410 -393 1999 -835 72 -54 150 -116 175 -138 l45 -41 -601 -602 -602 -602 -59 46 c-350 269 -837 470 -1265 522 l-58 7 0 841 0 840 101 -7 c55 -4 174 -18 265 -31z m-2778 -2681 c-271 -355 -460 -805 -519 -1236 l-12 -88 -874 0 -873 0 0 33 c0 116 60 468 120 703 165 647 492 1274 925 1777 l68 79 605 -605 605 -605 -45 -58z m5608 1032 c523 -671 815 -1402 919 -2303 l6 -53 -879 0 -879 0 -12 88 c-58 421 -257 895 -518 1235 l-46 59 604 605 604 604 58 -63 c32 -35 96 -112 143 -172z m-3226 -571 c1048 -130 1830 -1016 1830 -2075 0 -881 -536 -1655 -1361 -1963 -453 -170 -1002 -170 -1456 -1 -572 213 -1024 665 -1237 1236 -143 385 -166 844 -61 1254 259 1013 1239 1678 2285 1549z m-2906 -2424 c46 -408 239 -885 501 -1235 l66 -90 -1170 -1170 -1171 -1171 0 1863 0 1862 884 0 883 0 7 -59z m7066 -2306 l0 -2365 -875 0 -875 0 0 2365 0 2365 875 0 875 0 0 -2365z m-1171 -2935 c826 0 1162 -3 1167 -11 3 -6 3 -339 -1 -741 -7 -666 -9 -729 -24 -725 -9 3 -94 39 -190 81 -622 272 -1214 455 -1610 497 -156 16 -496 6 -667 -20 -480 -74 -886 -211 -1556 -524 l-78 -36 0 2207 0 2208 118 17 c504 73 996 310 1394 671 92 83 265 270 278 299 3 7 6 -873 8 -1955 l2 -1968 1159 0z m-4832 3444 c350 -261 830 -456 1231 -500 l62 -7 0 -2352 0 -2353 -72 -37 c-40 -21 -194 -104 -343 -185 -148 -81 -314 -171 -369 -200 l-98 -53 -1564 1564 -1564 1564 1312 1312 c722 722 1314 1313 1315 1313 0 0 41 -30 90 -66z m-157 -5935 c0 -8 -198 -65 -315 -90 -167 -35 -388 -37 -546 -5 -443 90 -1026 342 -1704 737 l-110 64 -3 990 -2 990 1340 -1340 c737 -737 1340 -1343 1340 -1346z m4375 1001 c406 -70 1028 -285 1637 -566 l128 -58 -5 -36 c-56 -429 -125 -727 -240 -1045 -50 -136 -149 -374 -162 -386 -5 -4 -87 24 -183 62 -927 368 -1494 429 -2251 243 -520 -127 -1313 -477 -2264 -998 -819 -449 -1142 -578 -1544 -618 -232 -22 -495 32 -899 184 l-133 51 -62 71 c-424 486 -747 1090 -917 1715 -40 144 -92 373 -86 378 2 2 45 -20 97 -48 906 -493 1538 -689 2065 -640 519 48 936 210 1769 685 306 175 824 439 1165 594 601 272 1028 400 1465 436 100 8 303 -3 420 -24z m76 -2299 c283 -59 989 -285 989 -316 0 -5 -40 -65 -88 -132 -743 -1039 -1801 -1673 -3077 -1845 -230 -31 -805 -33 -1035 -5 -610 76 -1180 262 -1684 550 l-109 62 129 12 c512 49 909 205 1774 698 271 154 871 458 1165 590 549 247 953 371 1365 419 126 15 428 -3 571 -33z"/> </g> </svg><span>Kirche für Lippstadt</span></a>
+    <p>Das Onboarding ist ein kostenloses und unverbindliches Angebot der <a href="https://kirchefuerlippstadt.de" target="_blank" rel="noopener">Kirche für Lippstadt</a>, das dir helfen soll, deinen Platz im Reich Gottes zu entdecken.</p>
+    <p>Wenn du unsere Arbeit finanziell unterstützt, sind wir dir von Herzen dankbar.</p>
+    <a class="btn ghost small" href="https://kirchefuerlippstadt.de/#unterstützen" target="_blank" rel="noopener">Unsere Arbeit unterstützen</a>
+  </footer>
+</main>
+<script>
+(function(){
+  // Spalten: 0=D, 1=I, 2=S, 3=G
+  var ROWS = [
+    ["selbstsicher","optimistisch","harmonisch","genau"],
+    ["wagemutig","kontaktfreudig","zuhörend","nachdenkend"],
+    ["entscheidungsfreudig","spontan","geduldig","kontrollierend"],
+    ["bestimmend","begeistert","teamfähig","sorgfältig"],
+    ["kraftvoll","beliebt","vertrauenswürdig","analytisch"],
+    ["ergebnisorientiert","enthusiastisch","beständig","selbstdiszipliniert"],
+    ["risikofreudig","positiv","unterstützend","zurückhaltend"],
+    ["zielorientiert","impulsiv","zuverlässig","kritisch"],
+    ["furchtlos","gesellig","unauffällig","strukturiert"],
+    ["schnell","überzeugend","vermittelnd","planend"]
+  ];
+  var TYPES = [
+    {k:"D", name:"Dominant", text:"Direkt, zielstrebig und entscheidungsfreudig. Übernimmt gern Verantwortung, packt Herausforderungen an und bringt Dinge voran."},
+    {k:"I", name:"Initiativ", text:"Begeisternd, kontaktfreudig und optimistisch. Geht offen auf Menschen zu, motiviert andere und bringt Leben in eine Gruppe."},
+    {k:"S", name:"Stetig", text:"Beständig, geduldig und hilfsbereit. Hört gut zu, schafft ein harmonisches Miteinander und ist im Team verlässlich da."},
+    {k:"G", name:"Gewissenhaft", text:"Genau, analytisch und strukturiert. Denkt Dinge gründlich durch, achtet auf Qualität und sorgt für klare Abläufe."}
+  ];
+  var KEY = "disg-onboarding-v1";
+
+  var state = { order: [], answers: [], cur: 0 };
+
+  function newOrder(){
+    return ROWS.map(function(){
+      var a=[0,1,2,3];
+      for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}
+      return a;
+    });
+  }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+  function load(){
+    try{
+      var s = JSON.parse(localStorage.getItem(KEY));
+      if(s && s.order && s.order.length===ROWS.length && s.answers) return s;
+    }catch(e){}
+    return null;
+  }
+  function clear(){ try{ localStorage.removeItem(KEY); }catch(e){} }
+
+  var $ = function(id){ return document.getElementById("d-"+id); };
+  function show(id){ ["intro","quiz","result"].forEach(function(s){ $(s).classList.toggle("hidden", s!==id); }); window.scrollTo(0,0); }
+
+  function complete(r){ return state.answers[r] && state.answers[r].length===4; }
+
+  function renderRow(){
+    var r = state.cur, picked = state.answers[r] || [];
+    $("qnum").textContent = "Gruppe " + (r+1) + " von " + ROWS.length;
+    $("bar").style.width = ((r + (complete(r)?1:0)) / ROWS.length * 100) + "%";
+    var hints = [
+      "Welcher Begriff trifft am meisten auf dich zu?",
+      "Und welcher trifft als Nächstes zu?",
+      "Welcher von den beiden letzten passt eher zu dir?",
+      "Fertig! Du kannst durch Antippen noch etwas ändern."
+    ];
+    $("hint").textContent = hints[Math.min(picked.length,3)];
+    var box = $("words"); box.innerHTML = "";
+    state.order[r].forEach(function(col){
+      var pos = picked.indexOf(col);
+      var b = document.createElement("button");
+      b.className = "word" + (pos>-1 ? " ranked" : "");
+      b.type = "button";
+      var pts = pos>-1 ? (4-pos) : null;
+      b.innerHTML = '<span></span><span class="badge"></span>';
+      b.firstChild.textContent = ROWS[r][col];
+      b.lastChild.textContent = pts ? (pts + (pts===1?" Punkt":" Punkte")) : "–";
+      b.setAttribute("aria-label", ROWS[r][col] + (pts ? ", " + pts + " Punkte" : ", noch nicht bewertet"));
+      b.addEventListener("click", function(){ toggle(col); });
+      box.appendChild(b);
+    });
+    $("nextBtn").disabled = !complete(r);
+    $("nextBtn").textContent = r===ROWS.length-1 ? "Ergebnis anzeigen" : "Weiter";
+    $("backBtn").textContent = r===0 ? "Zur Einführung" : "Zurück";
+  }
+
+  function toggle(col){
+    var r = state.cur, a = (state.answers[r] || []).slice();
+    var i = a.indexOf(col);
+    if(i>-1){ a.splice(i,1); if(a.length===3) a.pop(); }   // entfernen; automatische 1 ebenfalls lösen
+    else {
+      a.push(col);
+      if(a.length===3){ [0,1,2,3].forEach(function(c){ if(a.indexOf(c)<0) a.push(c); }); }
+    }
+    state.answers[r] = a; save(); renderRow();
+  }
+
+  function scores(){
+    var s=[0,0,0,0];
+    state.answers.forEach(function(a){ a.forEach(function(col,pos){ s[col]+=4-pos; }); });
+    return s;
+  }
+
+  function chartSVG(s){
+    var W=440, C=220, H=150;             // Mittelpunkt, halbe Seitenlänge des Quadrats
+    var diag=H;                          // Entfernung Mitte -> Ecke pro Achse (in x und y)
+    var dirs=[[-1,-1],[1,-1],[1,1],[-1,1]]; // D, I, S, G
+    function pt(i,v){ var f=(v-5)/35; return [C+dirs[i][0]*diag*f, C+dirs[i][1]*diag*f]; }
+    var o='<svg viewBox="0 0 '+W+' '+W+'" role="img" aria-label="DISG-Diagramm: D '+s[0]+', I '+s[1]+', S '+s[2]+', G '+s[3]+' Punkte">';
+    // Diagonalen + Skala
+    dirs.forEach(function(d){ o+='<line x1="'+C+'" y1="'+C+'" x2="'+(C+d[0]*H)+'" y2="'+(C+d[1]*H)+'" stroke="var(--line-soft)" stroke-width="5" stroke-linecap="round"/>'; });
+    [10,20,30,40].forEach(function(v){
+      var pts=dirs.map(function(_,i){return pt(i,v).join(",");}).join(" ");
+      o+='<polygon points="'+pts+'" fill="none" stroke="var(--line-soft)" stroke-width="1" stroke-dasharray="3 4"/>';
+    });
+    // Fläche
+    var poly=s.map(function(v,i){return pt(i,v).join(",");}).join(" ");
+    o+='<polygon points="'+poly+'" fill="var(--gold)" fill-opacity=".85" stroke="var(--gold)" stroke-width="2" stroke-linejoin="round"/>';
+    // Quadranten-Rahmen
+    o+='<rect x="'+(C-H)+'" y="'+(C-H)+'" width="'+(2*H)+'" height="'+(2*H)+'" fill="none" stroke="var(--line)" stroke-width="3"/>';
+    o+='<line x1="'+C+'" y1="'+(C-H)+'" x2="'+C+'" y2="'+(C+H)+'" stroke="var(--line)" stroke-width="3"/>';
+    o+='<line x1="'+(C-H)+'" y1="'+C+'" x2="'+(C+H)+'" y2="'+C+'" stroke="var(--line)" stroke-width="3"/>';
+    // Skalenwerte auf der D-Achse
+    [10,20,30,40].forEach(function(v){ var p=pt(0,v); o+='<text x="'+(p[0]+8)+'" y="'+(p[1]-4)+'" font-family="Poppins,sans-serif" font-size="10" fill="var(--muted)">'+v+'</text>'; });
+    // Punkte
+    s.forEach(function(v,i){ var p=pt(i,v); o+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="4.5" fill="var(--green)"/>'; });
+    // Buchstaben
+    var L=[["D",C-H-14,C-H-10,"end"],["I",C+H+14,C-H-10,"start"],["S",C+H+14,C+H+50,"start"],["G",C-H-14,C+H+50,"end"]];
+    L.forEach(function(l){ o+='<text x="'+l[1]+'" y="'+l[2]+'" text-anchor="'+l[3]+'" font-family="Playfair Display,Georgia,serif" font-weight="700" font-size="52" fill="var(--ink)">'+l[0]+'</text>'; });
+    // Achsenbeschriftungen
+    var g='font-family="Poppins,sans-serif" font-weight="700" font-size="14" fill="var(--gold)"';
+    o+='<text x="'+C+'" y="'+(C-H-16)+'" text-anchor="middle" '+g+'>Extrovertiert</text>';
+    o+='<text x="'+C+'" y="'+(C+H+28)+'" text-anchor="middle" '+g+'>Introvertiert</text>';
+    o+='<text transform="translate('+(C-H-16)+','+C+') rotate(-90)" text-anchor="middle" '+g+'>Sachorientiert</text>';
+    o+='<text transform="translate('+(C+H+26)+','+C+') rotate(90)" text-anchor="middle" '+g+'>Beziehungsorientiert</text>';
+    return o+'</svg>';
+  }
+
+  function renderResult(){
+    var s = scores();
+    var ranked=[0,1,2,3].sort(function(a,b){return s[b]-s[a];});
+    var max=s[ranked[0]];
+    var leads=ranked.filter(function(i){return s[i]===max;});
+    var sum;
+    if(leads.length>1){
+      sum="Bei dir sind die Anteile "+leads.map(function(i){return TYPES[i].name;}).join(" und ")+" gleich stark ausgeprägt.";
+    } else {
+      sum="Am stärksten ausgeprägt ist bei dir der Anteil <strong>"+TYPES[ranked[0]].name+"</strong>, gefolgt von "+TYPES[ranked[1]].name+".";
+    }
+    $("summary").innerHTML=sum;
+    $("chart").innerHTML=chartSVG(s);
+    $("scores").innerHTML=TYPES.map(function(t,i){
+      var lead=leads.indexOf(i)>-1;
+      return '<div class="score'+(lead?' lead':'')+'"><div class="top"><span class="l">'+t.k+'</span><span class="v">'+s[i]+'</span></div><div class="n">'+t.name+' · von 40</div><div class="bar"><i style="width:'+((s[i]-10)/30*100)+'%"></i></div></div>';
+    }).join("");
+    $("types").innerHTML=ranked.map(function(i){
+      var lead=leads.indexOf(i)>-1;
+      return '<div class="type'+(lead?' lead':'')+'"><h3>'+TYPES[i].k+' – '+TYPES[i].name+' ('+s[i]+' Punkte)</h3><p>'+TYPES[i].text+'</p></div>';
+    }).join("");
+    show("result");
+  }
+
+  function start(fresh){
+    if(fresh){ state={order:newOrder(),answers:[],cur:0}; save(); }
+    show("quiz"); renderRow();
+  }
+
+  $("startBtn").addEventListener("click", function(){ start(true); });
+  $("resumeBtn").addEventListener("click", function(){
+    if(state.answers.filter(Boolean).length===ROWS.length && state.answers.every(function(a){return a&&a.length===4;})) renderResult();
+    else start(false);
+  });
+  $("resetRow").addEventListener("click", function(){ state.answers[state.cur]=[]; save(); renderRow(); });
+  $("nextBtn").addEventListener("click", function(){
+    if(!complete(state.cur)) return;
+    if(state.cur<ROWS.length-1){ state.cur++; save(); renderRow(); window.scrollTo(0,0); }
+    else { save(); renderResult(); }
+  });
+  $("backBtn").addEventListener("click", function(){
+    if(state.cur===0) show("intro"); else { state.cur--; save(); renderRow(); }
+  });
+  $("reviewBtn").addEventListener("click", function(){ state.cur=0; show("quiz"); renderRow(); });
+  $("restartBtn").addEventListener("click", function(){ clear(); start(true); });
+
+  window.OB_DISG = { state:function(){ return state; }, rows:ROWS };
+  var saved = load();
+  if(saved && saved.answers.some(function(a){return a && a.length;})){ state=saved; $("resumeBtn").classList.remove("hidden"); }
+})();
+</script>
+<script>
+(function(){
+  var Q = ["Mir macht es Spaß, Aufgaben und Veranstaltungen zu organisieren.", "Ich würde gerne Gemeinden an Orten aufbauen, wo es bisher noch keine (passende) Gemeinde gibt.", "Es macht mir Freude, mit Holz, Stoff, Farben, Glas oder anderen Materialien zu arbeiten.", "Es bereitet mir Freude, künstlerische Formen (Musik, Theater, Bilder, Dekoration, Film …) einzusetzen, damit Menschen sich mit Fragen über Gott befassen.", "Ich kann schnell unterscheiden zwischen geistlicher Wahrheit und Irrtum, zwischen Gut und Böse.", "Ich sehe, welches Potenzial in Menschen verborgen ist.", "Ich kann kirchendistanzierten Menschen das Evangelium klar und wirkungsvoll kommunizieren.", "Mir fällt es leicht, darauf zu vertrauen, dass meine Gebete erhört werden.", "Ich gebe gerne und großzügig für Menschen in Not oder für Projekte, die finanzielle Unterstützung brauchen.", "Ich arbeite gerne im Hintergrund und unterstütze damit die Arbeit anderer.", "Ich öffne meine Wohnung gerne für Menschen.", "Ich sammle Gebetsanliegen von anderen Menschen und bete regelmäßig für sie.", "Ich werde von Menschen nach meiner Auslegung von Bibelstellen oder nach meinem Verständnis von biblischen Aussagen gefragt.", "Ich kann andere Menschen motivieren, ein Ziel zu verfolgen.", "Ich kann mich gut in Menschen einfühlen, die Probleme oder seelische Verletzungen haben, und begleite gerne ihren Heilungsprozess.", "Ich kann so in das Leben anderer hineinsprechen, dass sie von Fehlverhalten überführt werden und sich ändern.", "Es macht mir Freude, Zeit in das geistliche Wachstum anderer Menschen zu investieren.", "Ich kann Wissen so weitergeben, dass andere es in ihrem Alltag umsetzen können.", "Ich werde bei geistlichen oder persönlichen Problemen oft um Rat gefragt.", "Ich bin sorgfältig, gründlich und geschickt, wenn es darum geht, Kleinigkeiten effektiv zu erledigen.", "Mich reizt der Gedanke, in einem anderen Land oder einer anderen Kultur zu arbeiten.", "Ich kann geschickt mit verschiedenen Werkzeugen umgehen.", "Es macht mir Spaß, meine künstlerischen Fähigkeiten zu entwickeln und einzusetzen (z. B. Kunst, Theater, Musik, Fotografie …).", "Ich bin in der Lage, den Charakter eines Menschen bereits nach wenigen Eindrücken zu erkennen.", "Es macht mir Freude, entmutigte Menschen wieder aufzurichten und zu stärken.", "Ich nutze Gelegenheiten, um Kontakte zu Menschen zu knüpfen, die Gott noch nicht kennen.", "Es ist für mich natürlich, auch in schwierigen Zeiten an Gottes beständige Versorgung und Hilfe zu glauben.", "Ich gebe mehr als meinen Zehnten (10 % meines Einkommens), um christliche und karitative Projekte zu unterstützen.", "Ich erledige gerne Routinearbeiten, die die Arbeit anderer unterstützen.", "Ich gehe gerne auf neue Leute zu und trage dazu bei, dass sie sich wohlfühlen.", "Es bereitet mir Freude, lange Zeit im Gebet zu verbringen.", "Der Heilige Geist schenkt mir Erkenntnisse und Einsichten in biblische Zusammenhänge oder über Menschen.", "Ich kann andere Menschen motivieren, ein Projekt voranzutreiben.", "Ich kann geduldig Menschen begleiten, die durch schmerzhafte Prozesse gehen und versuchen, ihr Leben ins Lot zu bringen.", "Ich fühle mich dafür verantwortlich, andere Menschen mit der Wahrheit zu konfrontieren.", "Ich habe Mitleid mit Christen, die in die Irre gehen, und ich möchte sie davor schützen.", "Ich verbringe viel Zeit mit (Bibel-)Studium, weil ich weiß, dass die biblische Botschaft das Leben verändern kann.", "Ich kann bei Konflikten praktische Lösungen finden und chaotische Situationen entwirren.", "Ich kann Ziele klar herausarbeiten und Strategien oder Pläne entwerfen, um Ziele auch zu erreichen.", "Ich bin bereit, eine aktive Rolle zu übernehmen, wenn es darum geht, eine neue Gemeinde aufzubauen.", "Es bereitet mir Freude, Dinge herzustellen und zu reparieren, die man praktisch einsetzen kann.", "Ich helfe Menschen auf einfallsreiche, künstlerische Art, sich selbst, ihre Beziehungen und Gott besser zu verstehen.", "Ich kann Falschheit und Täuschung erkennen, bevor sie auch für andere offensichtlich werden.", "Ich gebe anderen Menschen Hoffnung, indem ich sie an die Verheißungen Gottes erinnere.", "Ich kann Menschen zeigen, dass das Evangelium auf ihre persönlichen Bedürfnisse und ihre Situation Antwort gibt.", "Ich bin fest davon überzeugt, dass ich mit Gottes Hilfe große Dinge vollbringen kann.", "Ich gehe verantwortungsbewusst mit meinem Geld um, damit ich mehr spenden kann.", "Ich übernehme gerne anfallende Gelegenheitsarbeiten, um damit anderen zu helfen.", "Ich bringe gerne Menschen miteinander in Kontakt, die sich noch nicht kennen.", "Ich bin davon überzeugt, dass ich anderen Menschen einen wichtigen Dienst leiste, wenn ich für sie bete.", "Ich nehme mir gerne feste Zeiten zum Bibellesen, um Aussagen der Bibel genau zu erfassen.", "Ich kann mich in ein Projekt so einbringen, dass andere motiviert sind, ebenfalls ihr Bestes zu geben.", "Es macht mir Freude, Menschen zu helfen, denen niemand helfen will oder die am Rande der Gesellschaft stehen.", "Ich weise offen auf Trends, Meinungen oder Ereignisse in der Gesellschaft hin, die dem christlichen Glauben widersprechen.", "Ich kümmere mich gerne um den ganzen Menschen – seine Beziehungen, seine Gefühle, sein geistliches Leben …", "Ich achte genau auf Absicht, Inhalt, Form und Stil, wenn jemand unterrichtet oder predigt, und überlege, was ich dazulernen kann.", "Es fällt mir leicht, unter verschiedenen Möglichkeiten die beste Vorgehensweise herauszufinden.", "Ich bin in der Lage, die Mittel zu finden und effektiv einzusetzen, die für eine Aufgabe nötig sind.", "Ich habe die Erfahrung gemacht, dass Leiter oder Mitarbeiter aus anderen Gemeinden mich um Rat gefragt haben.", "Ich habe die Erfahrung gemacht, dass ich mit der Geschicklichkeit meiner Hände anderen Menschen helfen und sie erfreuen konnte.", "Ich finde gerne neue und unkonventionelle Möglichkeiten, um Aussagen auf eine neue Art zu kommunizieren (Worte, Musik, Video …).", "Ich kann in Situationen erkennen, was richtig oder falsch ist.", "Ich kann Menschen Rückhalt geben und sie motivieren, die mutige Schritte in ihrem Glauben, in ihrer Familie oder im Business gehen müssen.", "Ich kann immer wieder Menschen, die Gott noch nicht kennen, helfen, einen Schritt näher zu Gott zu kommen.", "Ich vertraue Gott in Situationen, in denen Erfolg durch menschliche Bemühungen allein nicht gewährleistet ist.", "Ich schränke gerne meinen Lebensstil ein, um christliche Projekte großzügig unterstützen zu können.", "Ich bin überzeugt, dass ich auch wichtige Gemeindearbeit mache, wenn ich praktische Aufgaben übernehme.", "Ich vermittle Menschen sehr schnell das Gefühl, willkommen zu sein.", "Ich bete voller Vertrauen, weil ich weiß, dass Gott Gebet erhört und handelt.", "Ich lerne gerne dazu und bin in diesem Sinne neugierig.", "Ich stecke Ziele und kann Menschen und Hilfsmittel so einsetzen, dass diese Ziele erreicht werden.", "Ich habe großes Mitleid mit seelisch verletzten Menschen.", "Ich kann Handlungen als richtig oder falsch beurteilen und habe das Bedürfnis, die falschen zu korrigieren.", "Es macht mir Freude, andere Menschen über einen langen Zeitraum hinweg zu unterstützen und mich um sie zu kümmern.", "Ich bevorzuge einen systematischen Zugang zu meinem Bibelstudium.", "Es ist für mich oft voraussehbar, welche Folgen das Handeln eines Einzelnen oder einer Gruppe haben kann.", "Ich helfe gerne Organisationen oder Gruppen, effektiver zu arbeiten.", "Ich kann in meinen Beziehungen sensibel mit (kulturellen) Verschiedenheiten umgehen.", "Wenn ich etwas Defektes sehe, repariere ich es nach Möglichkeit selbst.", "Ich gebe Gottes Wort auf kreative Art weiter, damit es ansprechend und leichter verständlich ist.", "Andere Menschen bestätigen mir, dass meine Eindrücke und Empfindungen zuverlässig sind.", "Ich stärke Menschen, die im Glauben unsicher sind.", "Ich erzähle Menschen ganz offen, dass ich Christ bin, und es freut mich, wenn sie mir Fragen zu meinem Glauben stellen.", "Ich halte oft noch an Zielen fest und vertraue darauf, dass Gott wirkt, wenn andere schon längst aufgegeben haben.", "Ich bin davon überzeugt, dass meine finanzielle Unterstützung in einem Werk oder einer Gemeinde etwas Positives verändern kann.", "Ich erledige auch gerne unscheinbare Aufgaben und warte nicht, bis ich darum gebeten werde.", "Es bereitet mir Freude, Menschen zu unterhalten und ein offenes Haus zu haben.", "Notsituationen anderer bringen mich spontan dazu, für sie zu beten.", "Ich weiß oft Dinge über Situationen und Menschen, ohne sie von jemandem erfahren zu haben.", "Ich veranlasse Menschen dazu, das Beste aus ihren Möglichkeiten zu machen.", "Ich kann trotz aller Fehler und Probleme eines Menschen dahinter ein Leben sehen, das wertvoll ist.", "Ich habe erlebt, dass Gedanken, die ich anderen Menschen weitergegeben habe, für sie wie ein direktes Reden Gottes waren.", "Es macht mir Freude, eine kleine Gruppe von Menschen anzuleiten und ihnen praktische Hilfestellungen zu geben.", "Ich kann so über die Bibel sprechen, dass andere Menschen angeregt werden, selbst die Bibel zu studieren, und mehr aus ihr lernen wollen.", "Ich gebe praktische Ratschläge, die anderen helfen, schwierige Situationen zu bewältigen.", "Ich lerne gern etwas darüber, wie Organisationen funktionieren.", "Es reizt mich, wenn ich bei neuen Aufgaben Pionierarbeit leisten kann.", "Ich kann gut mit meinen Händen arbeiten und habe dabei viel Freude.", "Ich bin kreativ und entwickle schnell und gerne viele neue Ideen.", "Ich merke schnell, wenn eine Predigt nicht mit den Aussagen der Bibel übereinstimmt.", "Ich motiviere gerne Menschen dazu, Fortschritte zu wagen.", "Ich mache aus meinem Glauben kein Geheimnis und spreche gerne darüber.", "Ich fordere andere Menschen dazu heraus, Gott zu vertrauen und mutige Glaubensschritte zu gehen.", "Ich sehe meinen Lebensstandard als ein Geschenk Gottes, deshalb spende ich großzügig.", "Ich fühle mich wohl, wenn ich andere unterstützen kann, damit sie ihre Aufgaben besser bewältigen können.", "Ich gebe mir Mühe, Menschen zu zeigen, dass sie dazugehören.", "Ich fühle mich geehrt, wenn mich jemand bittet, für sie oder ihn zu beten, und bete dann auch regelmäßig.", "Wenn ich in der Bibel lese oder sie studiere, entdecke ich wichtige Aussagen, die anderen Christen helfen.", "Ich kann eine neue Perspektive so vermitteln, dass andere Menschen sie gerne aufnehmen und bereit sind, eine neue Richtung einzuschlagen.", "Es bereitet mir Freude, Menschen in schwierigen Lebensumständen wieder Hoffnung und Freude zu vermitteln.", "Ich will Gottes Wahrheit aussprechen, auch wenn sie unbeliebt ist oder es für andere Menschen schwierig ist, sie anzunehmen.", "Ich kann Menschen stärken, die im Glauben unsicher geworden sind, und ihnen helfen, neues Vertrauen zu Gott zu gewinnen.", "Ich kann anderen Menschen ein Thema so vermitteln, dass sie es leicht verstehen und in ihrem Leben umsetzen können.", "Ich kann biblische Aussagen so auf aktuelle Situationen anwenden, dass sie für andere praktisch und hilfreich werden.", "Ich sehe oft voraus, was auf mich zukommt, kann mögliche Probleme vorausahnen und Lösungsstrategien planen.", "Ich sehe Probleme und Grenzen als Herausforderung und packe sie gerne an.", "Ich kann praktische Hilfsmittel entwickeln und herstellen.", "Ich nehme mir regelmäßig Zeit, meine künstlerischen Fähigkeiten weiterzuentwickeln (Musik, Deko, Film …).", "Ich spüre es, wenn Menschen oder Situationen von dämonischen Kräften beeinflusst sind.", "Ich fordere andere zu stärkerem geistlichem Wachstum heraus und korrigiere sie gegebenenfalls.", "Ich suche nach Gelegenheiten, um mit Menschen, die Gott noch nicht kennen, über geistliche Themen ins Gespräch zu kommen.", "Wenn ich spüre, dass Gott ein Vorhaben segnet, kann ich es zielstrebig weiterverfolgen, ungeachtet aller Schwierigkeiten oder fehlender Unterstützung.", "Ich bin überzeugt, dass mein Wohlstand ein Mittel ist, um christliche Arbeit besser unterstützen zu können.", "Ich setze mich bereitwillig und voller Freude ein, wo immer ich gebraucht werde.", "Ich kann Menschen helfen, auch in ungewohnten Umgebungen zurechtzufinden.", "Ich sehe oft konkrete Ergebnisse, wenn ich für bestimmte Anliegen gebetet habe.", "Es macht mir Freude, über Themen zu diskutieren, um so zu einem tieferen Verständnis zu kommen.", "Ich kann Ziele stecken und anderen Menschen helfen, diese Ziele zu erreichen.", "Ich leiste Menschen in Not gerne praktische Hilfe.", "Ich spreche Fehlverhalten an, um Veränderungen zu bewirken.", "Es macht mir Freude, andere Menschen auf ihrem Weg als Christ zu begleiten und zu fördern.", "Ich mache anderen Menschen gerne Sachverhalte verständlich, damit sie in ihrem Leben vorankommen.", "Ich kann in Problemsituationen gut Lösungen und Auswege aufzeigen.", "Ich habe die Erfahrung gemacht, dass Menschen schnell von Krankheit genesen sind bzw. ihr Leiden gelindert wurde, wenn ich für sie gebetet habe.", "Ich habe erlebt, dass ich Menschen verstanden habe, die eine andere Sprache sprechen, obwohl ich die Sprache nie gelernt habe.", "Ich rechne jederzeit mit dem übernatürlichen Wirken Gottes und erlebe das im Alltag.", "Ich bete manchmal in einer mir selbst fremden Sprache, wenn ich vom Heiligen Geist erfüllt bete.", "Ich habe den starken Wunsch, für die Heilung von Menschen zu beten, noch bevor sie mir von ihrer Krankheit bzw. ihrem Leiden erzählt haben.", "Ich habe die Erfahrung gemacht, dass ich als Einzige(r) in einer Gruppe das Gebet eines anderen sprachlich verstanden habe.", "Ich erlebe persönlich, wie Gott durch Wunder seine Größe zeigt, und teile diese Erlebnisse mit anderen Menschen.", "Ich habe erlebt, dass ich Ausländern bzw. im Ausland ein Gebet oder eine Andacht in ihrer Sprache weitergegeben habe, ohne diese gelernt zu haben."];
+  var LABELS = ["nie","selten","manch&shy;mal","oft","sehr stark"];
+  var ARIA = ["nie","selten","manchmal","stark oder oft","sehr stark"];
+  var PTS_A = [0,1,2,4,5];   // Fragen 1–133 (keine 3)
+  var PTS_B = [0,1,3,4,5];   // Fragen 134–141 (keine 2)
+  var GIFTS = [
+    ["A","Organisation","Plant und strukturiert Abläufe, damit Aufgaben und Veranstaltungen gut gelingen."],
+    ["B","Apostel","Baut Neues auf, gründet Gemeinden oder Arbeitsbereiche und denkt über Grenzen hinaus."],
+    ["C","Handwerk","Gestaltet, baut und repariert mit den Händen und dient so ganz praktisch."],
+    ["D","Kreativität","Macht Gottes Botschaft durch Kunst, Musik, Gestaltung und neue Ideen erlebbar."],
+    ["E","Geisterunterscheidung","Erkennt, ob etwas von Gott kommt, und unterscheidet Wahrheit von Irrtum."],
+    ["F","Ermutigung","Richtet Menschen auf, macht Mut und stärkt sie im Glauben und im Alltag."],
+    ["G","Evangelisation","Teilt den Glauben verständlich und natürlich mit Menschen, die Gott noch nicht kennen."],
+    ["H","Glaube","Vertraut Gott auch dort, wo menschlich wenig möglich scheint, und hält an seinen Zusagen fest."],
+    ["I","Geben","Unterstützt Menschen und Projekte großzügig und mit Freude aus den eigenen Mitteln."],
+    ["J","Helfen","Packt praktisch mit an und entlastet andere, oft im Hintergrund."],
+    ["K","Gastfreundschaft","Gibt Menschen das Gefühl, willkommen zu sein, und öffnet gern das eigene Zuhause."],
+    ["L","Gebet","Betet treu und ausdauernd für andere und erlebt Gebet als wirksamen Dienst."],
+    ["M","Erkenntnis","Gewinnt tiefe Einsichten in die Bibel und in Zusammenhänge und gibt sie weiter."],
+    ["N","Leitung","Gibt Richtung vor, setzt Ziele und motiviert Menschen, sie gemeinsam zu erreichen."],
+    ["O","Barmherzigkeit","Fühlt mit Leidenden mit und hilft Menschen am Rand ganz praktisch."],
+    ["P","Prophetie","Spricht Gottes Wahrheit mutig aus, auch wenn sie unbequem ist, und ruft zur Veränderung."],
+    ["Q","Hirtendienst","Begleitet Menschen langfristig und kümmert sich um ihr geistliches Wachstum."],
+    ["R","Lehren","Erklärt biblische Inhalte so, dass andere sie verstehen und im Alltag anwenden können."],
+    ["S","Weisheit","Findet in schwierigen Situationen gute, praktische Lösungen und gibt hilfreichen Rat."],
+    ["T","Heilung","Betet für Kranke und erlebt, wie Gott Heilung und Linderung schenkt."],
+    ["U","Auslegung von Zungenrede","Versteht und übersetzt Gebete oder Botschaften in Sprachenrede."],
+    ["V","Wundertaten","Erlebt Gottes übernatürliches Eingreifen und macht so seine Größe sichtbar."],
+    ["W","Zungenrede","Betet oder spricht in einer vom Heiligen Geist geschenkten, nicht erlernten Sprache."]
+  ];
+  function giftOf(i){ return i < 133 ? i % 19 : 19 + ((i - 133) % 4); } // i = 0-basiert
+
+  // Seiten: 1–133 in 14 Abschnitte, 134–141 als eigener Abschnitt
+  var PAGES = [], per = 133/14, s = 0;
+  for (var p=1;p<=14;p++){ var e = Math.round(p*per); PAGES.push([s,e]); s = e; }
+  PAGES.push([133,141]);
+
+  var KEY = "gabentest-onboarding-v1";
+  var state = { a: [], page: 0 };
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+  function load(){ try{ var x = JSON.parse(localStorage.getItem(KEY)); if(x && Array.isArray(x.a)) return x; }catch(e){} return null; }
+  function clear(){ try{ localStorage.removeItem(KEY); }catch(e){} }
+
+  var $ = function(id){ return document.getElementById("g-"+id); };
+  function show(id){ ["intro","quiz","result"].forEach(function(x){ $(x).classList.toggle("hidden", x!==id); }); window.scrollTo(0,0); }
+  function answered(){ return state.a.filter(function(v){ return v!==null && v!==undefined; }).length; }
+
+  function renderPage(){
+    var r = PAGES[state.page];
+    $("pg").textContent = "Abschnitt " + (state.page+1) + " von " + PAGES.length;
+    $("count").textContent = answered() + " von 141 beantwortet";
+    $("bar").style.width = (answered()/141*100) + "%";
+    $("special").classList.toggle("hidden", state.page !== PAGES.length-1);
+    $("missingMsg").classList.add("hidden");
+    var box = $("qs"); box.innerHTML = "";
+    for (var i=r[0]; i<r[1]; i++){
+      var d = document.createElement("div");
+      d.className = "q"; d.id = "g-q"+i;
+      var html = '<div class="t"><span class="n">'+(i+1)+'</span><span></span></div><div class="opts" role="radiogroup" aria-label="Aussage '+(i+1)+'">';
+      for (var k=0;k<5;k++){
+        var on = state.a[i]===k;
+        html += '<button type="button" class="opt" role="radio" aria-checked="'+on+'" aria-label="'+ARIA[k]+'" data-i="'+i+'" data-k="'+k+'">'+LABELS[k]+'</button>';
+      }
+      d.innerHTML = html + '</div>';
+      d.querySelector(".t span:last-child").textContent = Q[i];
+      box.appendChild(d);
+    }
+    $("backBtn").textContent = state.page===0 ? "Zur Einführung" : "Zurück";
+    $("nextBtn").textContent = state.page===PAGES.length-1 ? "Ergebnis anzeigen" : "Weiter";
+  }
+
+  $("qs").addEventListener("click", function(ev){
+    var b = ev.target.closest(".opt"); if(!b) return;
+    var i = +b.dataset.i, k = +b.dataset.k;
+    var first = state.a[i]===null || state.a[i]===undefined;
+    state.a[i] = k; save();
+    var q = $("q"+i);
+    q.classList.remove("missing");
+    q.querySelectorAll(".opt").forEach(function(o){ o.setAttribute("aria-checked", String(+o.dataset.k===k)); });
+    $("count").textContent = answered() + " von 141 beantwortet";
+    $("bar").style.width = (answered()/141*100) + "%";
+    if (first){
+      var r = PAGES[state.page];
+      for (var j=i+1;j<r[1];j++){ if(state.a[j]===null||state.a[j]===undefined){ var n=$("q"+j); var rect=n.getBoundingClientRect(); if(rect.top > window.innerHeight*0.6) n.scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto":"smooth", block:"center"}); break; } }
+    }
+  });
+
+  $("nextBtn").addEventListener("click", function(){
+    var r = PAGES[state.page], firstMissing = null;
+    for (var i=r[0];i<r[1];i++){
+      if(state.a[i]===null||state.a[i]===undefined){ $("q"+i).classList.add("missing"); if(firstMissing===null) firstMissing=i; }
+    }
+    if (firstMissing!==null){
+      $("missingMsg").classList.remove("hidden");
+      $("q"+firstMissing).scrollIntoView({block:"center"});
+      return;
+    }
+    if (state.page < PAGES.length-1){ state.page++; save(); renderPage(); window.scrollTo(0,0); }
+    else renderResult();
+  });
+  $("backBtn").addEventListener("click", function(){
+    if (state.page===0) show("intro"); else { state.page--; save(); renderPage(); window.scrollTo(0,0); }
+  });
+
+  function scores(){
+    var sc = GIFTS.map(function(){ return 0; });
+    for (var i=0;i<141;i++){ var k = state.a[i]; if(k===null||k===undefined) continue; sc[giftOf(i)] += (i<133 ? PTS_A : PTS_B)[k]; }
+    return sc;
+  }
+
+  function renderResult(){
+    var sc = scores();
+    var idx = []; for (var g=0; g<19; g++) idx.push(g);
+    idx.sort(function(a,b){ return sc[b]-sc[a] || a-b; });
+    var fifth = sc[idx[4]];
+    var top = idx.slice(0,5);
+    var tied = idx.slice(5).filter(function(g){ return sc[g]===fifth; });
+
+    $("top5").innerHTML = top.map(function(g){
+      return '<li><span class="rk" aria-hidden="true"></span><h3>'+GIFTS[g][1]+'</h3><span class="sc">Buchstabe '+GIFTS[g][0]+' · '+sc[g]+' von 35 Punkten</span><p>'+GIFTS[g][2]+'</p></li>';
+    }).join("");
+    $("tieNote").textContent = tied.length
+      ? "Gleichauf mit Platz 5 (" + fifth + " Punkte): " + tied.map(function(g){ return GIFTS[g][1]; }).join(", ") + "."
+      : "";
+
+    // Übernatürliche Geistesgaben: ab 6 Punkten, bei mehreren das höchste Ergebnis
+    var sup = [19,20,21,22], maxS = Math.max.apply(null, sup.map(function(g){ return sc[g]; }));
+    var stars = maxS >= 6 ? sup.filter(function(g){ return sc[g]===maxS; }) : [];
+    $("starBox").innerHTML = stars.length ? stars.map(function(g){
+      return '<div class="star"><h3>✱ ' + GIFTS[g][1] + '</h3><p>Übernatürliche Geistesgabe · ' + sc[g] + ' von 10 Punkten. ' + GIFTS[g][2] + '</p></div>';
+    }).join("") : "";
+
+    function row(g, max){
+      var isTop = top.indexOf(g)>-1 || stars.indexOf(g)>-1;
+      return '<div class="row'+(isTop?' top':'')+'"><span class="l">'+GIFTS[g][0]+'</span><span class="nm" title="'+GIFTS[g][1]+'">'+GIFTS[g][1]+'</span><span class="b"><i style="width:'+(sc[g]/max*100)+'%"></i></span><span class="v">'+sc[g]+'</span></div>';
+    }
+    var html = '<div class="sub">Gaben A–S · maximal 35 Punkte</div>' + idx.map(function(g){ return row(g,35); }).join("");
+    var supSorted = sup.slice().sort(function(a,b){ return sc[b]-sc[a] || a-b; });
+    html += '<div class="sub" style="margin-top:22px">Übernatürliche Geistesgaben T–W · maximal 10 Punkte, ab 6 Punkten hervorgehoben</div>' + supSorted.map(function(g){ return row(g,10); }).join("");
+    $("allbars").innerHTML = html;
+    show("result");
+  }
+
+  function start(fresh){
+    if (fresh){ state = { a: new Array(141).fill(null), page: 0 }; save(); }
+    show("quiz"); renderPage();
+  }
+  $("startBtn").addEventListener("click", function(){ start(true); });
+  $("resumeBtn").addEventListener("click", function(){ if (answered()===141) renderResult(); else start(false); });
+  $("reviewBtn").addEventListener("click", function(){ state.page = 0; save(); show("quiz"); renderPage(); });
+  $("restartBtn").addEventListener("click", function(){ clear(); start(true); });
+
+  window.OB_GABEN = { state:function(){ return state; }, scores:scores, gifts:GIFTS };
+  var saved = load();
+  if (saved && saved.a.length===141 && saved.a.some(function(v){ return v!==null; })){
+    state = saved; $("resumeBtn").classList.remove("hidden");
+  }
+})();
+</script>
+<script>
+(function(){
+  // ---------- Inhalte aus dem Arbeitsblatt ----------
+  var THEMEN = [
+    ["Natur & Reisen", ["Umweltschutz","Tierschutz","Pflanzen","Natur","Reisen"]],
+    ["Glaube & Gemeinde", ["Gemeinde","Jüngerschaft","Evangelisation","Geistliches Wachstum","Mission"]],
+    ["Wirtschaft & Technik", ["Karriere","Management","Wirtschaft","Finanzen","Technischer Fortschritt"]],
+    ["Bildung, Kunst & Medien", ["Sprache","Philosophie","Literatur","Bildung","Kunst","Malen","Grafik","Werbung","Musik","Filme","Social Media","Design"]],
+    ["Gesellschaft", ["Gesellschaft","Medien","Politik","Sucht","Minderheiten","Armut","Hunger","Krankheiten","Gewalt","Rassismus","Abtreibung","Wissenschaft"]],
+    ["Genuss & Lifestyle", ["Fashion","Fotografie","Poesie","Zubereitung von herzhaften Speisen","Zubereitung von Desserts","Heißgetränke","Kaltgetränke","Spirituosen"]],
+    ["Leitung & Entwicklung", ["Leiterschaft","Persönlichkeitsentwicklung","Coaching","Beratung","Seminare"]],
+    ["Gesundheit & Zuhause", ["Gesundheit","Ernährung","Sport","Fitness","Wohnen","Garten","Heimwerken"]],
+    ["Beziehungen & Familie", ["Beziehungen","Konflikte","Familie","Erziehung","Mentoring","Kinderbetreuung","Sozialwesen"]]
+  ];
+  var PERSONEN = [
+    ["Alter", ["Babys","Kinder","Teenager","Jugendliche","Junge Erwachsene","Erwachsene","Senioren"]],
+    ["Gesundheit", ["Gesunde","Kranke","Menschen mit Behinderung","Pflegebedürftige"]],
+    ["Neu am Ort", ["Neu Zugezogene","Touristen","Migranten"]],
+    ["Lebenssituation", ["Singles","Verheiratete","Väter","Mütter","Geschiedene","Alleinerziehende","Verwitwete","Minderjährige Mütter"]],
+    ["Menschen in schwierigen Lagen", ["Gesellschaftlich Benachteiligte","Seelisch tief Verletzte","Abhängige/Suchtgefährdete","Arme","Randgruppen","Flüchtlinge","Häftlinge","Ausländer"]],
+    ["Glaube", ["Am Glauben Interessierte","Dem Glauben kritisch Gegenüberstehende","Neu Bekehrte","Angehörige anderer Religionen"]],
+    ["Ausbildung & Arbeit", ["Schüler","Studenten","Pensionierte","Arbeitslose","Geschäftsleute","Arbeiter"]],
+    ["Berufe & Milieus", ["Künstler","Unternehmer","Wohlhabende Menschen","Handwerker","Journalisten","Musiker","Politiker","Abenteurer","Berufstätige Frauen","Pastoren","Sportler","Akademiker"]]
+  ];
+  var FRAGEN_T = [
+    "Was sind deine Hobbys?",
+    "Über welches Thema könntest du stundenlang reden oder zuhören?",
+    "Welche Themen behandeln die Accounts, denen du auf Instagram, YouTube & Co. folgst?",
+    "Worüber liest du Bücher, Zeitschriften oder schaust Lehrfilme?",
+    "Bei welchem Thema schlägt dein Herz höher?",
+    "Wenn Zeit und Geld keine Rolle spielten – womit würdest du dich beschäftigen?"
+  ];
+  var FRAGEN_P = [
+    "Welche Personengruppen interessieren dich am meisten?",
+    "Mit welchen Menschen bist du gerne zusammen?",
+    "Welche Menschen fühlen sich am ehesten zu dir hingezogen?",
+    "Mit welchen Menschen würdest du am liebsten zusammenarbeiten?",
+    "Wem möchtest du ein besseres Leben ermöglichen?"
+  ];
+  var CIRCLE = "●", TRI = "▼";
+
+  // ---------- Zustand ----------
+  var KEY = "traum-onboarding-v1";
+  function fresh(){ return { step:0, tSel:[], tCustom:[], tTop:["","",""], pSel:[], pCustom:[], pTop:["","",""],
+    sugg:null, suggFor:"", pick:{tU:"",tZ:"",pU:"",pZ:""}, sent:null, sentFor:"", fav:null, favText:"" }; }
+  var S = fresh();
+  try{ var raw = JSON.parse(localStorage.getItem(KEY)); if(raw && typeof raw.step==="number") S = Object.assign(fresh(), raw); }catch(e){}
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+
+
+  // ---------- Helfer ----------
+  function h(tag, attrs, kids){
+    var el = document.createElement(tag);
+    if (attrs) for (var k in attrs){
+      if (k==="text") el.textContent = attrs[k];
+      else if (k==="html") el.innerHTML = attrs[k];
+      else if (k.slice(0,2)==="on") el.addEventListener(k.slice(2), attrs[k]);
+      else if (attrs[k]!==null && attrs[k]!==undefined && attrs[k]!==false) el.setAttribute(k, attrs[k]===true ? "" : attrs[k]);
+    }
+    (kids||[]).forEach(function(c){ if(c) el.appendChild(typeof c==="string" ? document.createTextNode(c) : c); });
+    return el;
+  }
+  function go(n){ S.step = n; save(); render(); window.scrollTo(0,0); }
+  function filled(arr){ return arr.every(function(x){ return x.trim(); }); }
+
+  var STEPS = ["Start","Traum-Themen","Top 3 Themen","Traum-Personen","Top 3 Personen","Muster erkennen","Visionssatz","Zusammenfassung"];
+
+  function header(){
+    return [
+      h("div",{class:"progress","aria-hidden":"true"},[h("i",{style:"width:"+(S.step/(STEPS.length-1)*100)+"%"})]),
+      h("div",{class:"stepname",text:"Schritt "+S.step+" von "+(STEPS.length-1)+": "+STEPS[S.step]})
+    ];
+  }
+  function nav(backTo, nextLabel, nextOk, nextFn){
+    return h("div",{class:"nav"},[
+      h("button",{class:"btn ghost",onclick:function(){ go(backTo); },text:"Zurück"}),
+      h("div",{class:"right"},[ h("button",{class:"btn",disabled:!nextOk,onclick:nextFn,text:nextLabel}) ])
+    ]);
+  }
+
+  // ---------- Schritt 0: Intro ----------
+  function viewIntro(){
+    var hasProgress = S.tSel.length || S.tTop.some(Boolean);
+    return [
+      h("div",{class:"title-big",text:"Traum"}),
+      h("p",{text:"Gott hat dir eine Leidenschaft ins Herz gelegt – Themen, die dich begeistern, und Menschen, für die dein Herz schlägt. In diesem Test spürst du deinem Traum nach und formulierst am Ende einen ersten Visionssatz."}),
+      h("div",{class:"card"},[
+        h("h3",{text:"So funktioniert’s"}),
+        h("div",{class:"steps3"},[
+          h("div",{},[h("b",{text:"1"}),h("span",{text:"Du wählst deine Top 3 Traum-Themen und deine Top 3 Traum-Personengruppen."})]),
+          h("div",{},[h("b",{text:"2"}),h("span",{html:"Du suchst nach Mustern: Was haben sie gemeinsam (<span class='sym'>●</span>umkreisen) und was ergibt sich, wenn alles zusammenkommt (<span class='sym'>▼</span>zuspitzen)? Wenn du magst, hilft dir dabei eine KI deiner Wahl – wir geben dir den passenden Text zum Kopieren."})]),
+          h("div",{},[h("b",{text:"3"}),h("span",{text:"Daraus entstehen erste Versionen deines Visionssatzes: „Ich helfe … dabei, …“"})])
+        ])
+      ]),
+      h("p",{class:"muted small",text:"Dein Fortschritt wird auf diesem Gerät gespeichert."}),
+      h("div",{class:"nav"},[
+        h("button",{class:"btn",onclick:function(){ go(1); },text: hasProgress ? "Weitermachen" : "Los geht’s"}),
+        hasProgress ? h("button",{class:"link",onclick:function(){ S = fresh(); save(); go(1); },text:"Von vorn beginnen"}) : null
+      ])
+    ];
+  }
+
+  // ---------- Auswahl (Themen / Personen) ----------
+  function viewSelect(kind){
+    var isT = kind==="t";
+    var groups = isT ? THEMEN : PERSONEN;
+    var sel = isT ? S.tSel : S.pSel, custom = isT ? S.tCustom : S.pCustom;
+    var out = header().concat([
+      h("h1",{text: isT ? "Deine Traum-Themen" : "Deine Traum-Personengruppen"}),
+      h("p",{text:"Nimm dir einen Moment und denk über diese Fragen nach:"}),
+      h("ul",{class:"questions"}, (isT?FRAGEN_T:FRAGEN_P).map(function(q){ return h("li",{text:q}); })),
+      h("p",{class:"card small",style:"margin-top:18px",html:"<strong>Tippe alles an, was auf dich zutrifft</strong> – gern mehrere. Im Zweifel lieber nicht antippen."})
+    ]);
+    function chip(label){
+      var on = sel.indexOf(label)>-1;
+      return h("button",{type:"button",class:"chip","aria-pressed":String(on),text:label,onclick:function(){
+        var i = sel.indexOf(label); if(i>-1) sel.splice(i,1); else sel.push(label); save(); render();
+      }});
+    }
+    groups.forEach(function(g){
+      out.push(h("div",{class:"group"},[h("h3",{text:g[0]}),h("div",{class:"chips"},g[1].map(chip))]));
+    });
+    if (custom.length) out.push(h("div",{class:"group"},[h("h3",{text:"Eigene Ergänzungen"}),h("div",{class:"chips"},custom.map(chip))]));
+    var inp = h("input",{type:"text",placeholder: isT ? "Eigenes Thema ergänzen …" : "Eigene Personengruppe ergänzen …","aria-label":"Eigenen Eintrag ergänzen"});
+    function add(){ var v = inp.value.trim(); if(!v) return; if(custom.indexOf(v)<0) custom.push(v); if(sel.indexOf(v)<0) sel.push(v); save(); render(); }
+    inp.addEventListener("keydown",function(e){ if(e.key==="Enter") add(); });
+    out.push(h("div",{class:"addrow"},[inp,h("button",{class:"btn small ghost",onclick:add,text:"Hinzufügen"})]));
+    out.push(h("div",{class:"selcount",text: sel.length + " ausgewählt"}));
+    out.push(nav(isT?0:2, "Weiter zu den Top 3", sel.length>=1, function(){ go(isT?2:4); }));
+    return out;
+  }
+
+  // ---------- Top 3 ----------
+  function viewTop(kind){
+    var isT = kind==="t";
+    var sel = isT ? S.tSel : S.pSel, top = isT ? S.tTop : S.pTop;
+    var inputs = [];
+    var out = header().concat([
+      h("h1",{text: isT ? "Wähle deine Top 3 Themen" : "Wähle deine Top 3 Personengruppen"}),
+      h("p",{text:"Welche drei " + (isT ? "Themen" : "Personengruppen") + " bewegen dich am meisten? Tippe sie aus deiner Auswahl an oder schreib sie selbst in die Felder."})
+    ]);
+    var nextBtn;
+    function update(){ nextBtn.disabled = !filled(top); }
+    var chips = h("div",{class:"chips"}, sel.map(function(label){
+      var used = top.indexOf(label)>-1;
+      return h("button",{type:"button",class:"chip","aria-pressed":String(used),text:label,onclick:function(){
+        var i = top.indexOf(label);
+        if (i>-1) top[i] = "";
+        else { var j = top.findIndex(function(x){ return !x.trim(); }); if (j<0) return; top[j] = label; }
+        save(); render();
+      }});
+    }));
+    out.push(chips);
+    out.push(h("div",{class:"slots"}, top.map(function(v,i){
+      var inp = h("input",{type:"text",value:v,placeholder:"Platz "+(i+1),"aria-label":"Platz "+(i+1)});
+      inp.addEventListener("input",function(){ top[i] = inp.value; save(); update(); });
+      inputs.push(inp);
+      return h("div",{class:"slot"},[h("b",{text:String(i+1)}),inp]);
+    })));
+    var n = nav(isT?1:3, isT ? "Weiter zu den Personen" : "Weiter zu den Mustern", filled(top), function(){ go(isT?3:5); });
+    nextBtn = n.querySelector(".right .btn");
+    out.push(n);
+    return out;
+  }
+
+  // ---------- Prompt-Box zum Kopieren ----------
+  function copyText(text, btn, ta){
+    function ok(){ btn.textContent = "Kopiert ✓"; setTimeout(function(){ btn.textContent = "Prompt kopieren"; }, 2200); }
+    function fallback(){
+      try{ ta.focus(); ta.select(); ta.setSelectionRange(0, ta.value.length); if (document.execCommand("copy")) { ok(); return; } }catch(e){}
+      btn.textContent = "Bitte Text markieren und kopieren";
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(ok, fallback);
+    else fallback();
+  }
+  function promptBox(text){
+    var ta = h("textarea",{class:"prompt",readonly:true,rows:"7","aria-label":"Prompt zum Kopieren"});
+    ta.value = text;
+    var btn = h("button",{class:"btn small",type:"button",text:"Prompt kopieren"});
+    btn.addEventListener("click", function(){ copyText(text, btn, ta); });
+    return h("div",{class:"aibox"},[
+      h("ol",{class:"aisteps"},[
+        h("li",{text:"Kopiere den Text unten. Deine Antworten sind schon eingesetzt."}),
+        h("li",{text:"Füge ihn in eine KI deiner Wahl ein, z. B. ChatGPT, Claude, Gemini oder Microsoft Copilot."}),
+        h("li",{text:"Lies die Vorschläge, wähl aus, was dich anspricht, und trag es unten ein."})
+      ]),
+      btn, ta,
+      h("p",{class:"muted small",style:"margin:10px 0 0",text:"Keine KI zur Hand? Kein Problem – überleg selbst oder mit einer vertrauten Person und trag deine Gedanken direkt ein."})
+    ]);
+  }
+  function list(arr){ return arr.map(function(x,i){ return (i+1)+". "+x.trim(); }).join("\n"); }
+
+  // ---------- Muster ----------
+  function promptMuster(){
+    return "Ich mache gerade ein christliches Onboarding-Programm meiner Kirche. Dabei geht es um meinen „Traum“ – die Leidenschaft, die Gott mir ins Herz gelegt hat. Bitte hilf mir, Muster zu erkennen.\n\n" +
+"Meine Top 3 Traum-Personengruppen:\n" + list(S.pTop) + "\n\n" +
+"Meine Top 3 Traum-Themen:\n" + list(S.tTop) + "\n\n" +
+"Wende auf beide Listen zwei Methoden an:\n\n" +
+"1. UMKREISEN (●): Finde den gemeinsamen Nenner, der alle drei verbindet – einen übergeordneten Begriff oder Bereich.\n" +
+"Beispiel Personen: Senioren, Alleinerziehende, Kranke → „Menschen, die im Alltag Unterstützung brauchen“.\n" +
+"Beispiel Themen: Kochen, Familie, Beziehungen → „Gemeinschaft rund um den Esstisch“.\n\n" +
+"2. ZUSPITZEN (▼): Verbinde ALLE DREI Begriffe zu EINER Schnittmenge, auf die alle drei gleichzeitig zutreffen. Nichts weglassen, nichts ersetzen, nichts Neues erfinden – die drei Begriffe werden nur sprachlich verschmolzen.\n" +
+"Beispiel Personen: Ausländer, Rentner, Menschen mit Behinderung → „ausländische Rentner mit Behinderung“.\n" +
+"Beispiel Personen: Erwachsene, Wohlhabende Menschen, Angehörige anderer Religionen → „wohlhabende Erwachsene, die einer anderen Religion angehören“.\n" +
+"Beispiel Themen: Musik, Social Media, Evangelisation → „evangelistische Musik auf Social Media“.\n" +
+"Jeder Zuspitzen-Vorschlag muss alle drei Begriffe erkennbar enthalten.\n\n" +
+"Gib mir für jede der vier Kategorien genau 3 kurze Vorschläge auf Deutsch, wertschätzend formuliert (Personengruppen im Plural). Antworte genau in dieser Form, ohne lange Einleitung:\n\n" +
+"● Personengruppe umkreist:\n1. …\n2. …\n3. …\n\n" +
+"▼ Personengruppe zugespitzt:\n1. …\n2. …\n3. …\n\n" +
+"● Thema umkreist:\n1. …\n2. …\n3. …\n\n" +
+"▼ Thema zugespitzt:\n1. …\n2. …\n3. …";
+  }
+
+  function viewMuster(){
+    var out = header().concat([
+      h("h1",{text:"Muster erkennen"}),
+      h("p",{text:"Jetzt schauen wir, was deine Auswahl verbindet. Dafür gibt es zwei Methoden:"}),
+      h("div",{class:"method"},[
+        h("div",{class:"card"},[h("div",{class:"icon",text:CIRCLE}),h("h3",{text:"Umkreisen"}),h("p",{class:"small muted",style:"margin:0",text:"Was haben alle drei gemeinsam? Du findest den gemeinsamen Nenner."})]),
+        h("div",{class:"card"},[h("div",{class:"icon",text:TRI}),h("h3",{text:"Zuspitzen"}),h("p",{class:"small muted",style:"margin:0",text:"Was ergibt sich, wenn alle drei gleichzeitig zutreffen? Zum Beispiel: Ausländer, Rentner, Menschen mit Behinderung → ausländische Rentner mit Behinderung."})])
+      ]),
+      h("div",{class:"recap"},[
+        h("div",{class:"card"},[h("h3",{text:"Deine Traum-Themen"}),h("ol",{},S.tTop.map(function(x){return h("li",{text:x});}))]),
+        h("div",{class:"card"},[h("h3",{text:"Deine Traum-Personengruppen"}),h("ol",{},S.pTop.map(function(x){return h("li",{text:x});}))])
+      ]),
+      h("h2",{text:"Lass dir von einer KI helfen"}),
+      promptBox(promptMuster()),
+      h("h2",{text:"Deine Muster"}),
+      h("p",{class:"muted small",text:"Wähle je eine Formulierung, die dich am meisten anspricht, und trag sie ein. Du kannst sie gern noch anpassen."})
+    ]);
+    var slots = [
+      ["pU", CIRCLE, "Personengruppe umkreist"],
+      ["pZ", TRI, "Personengruppe zugespitzt"],
+      ["tU", CIRCLE, "Thema umkreist"],
+      ["tZ", TRI, "Thema zugespitzt"]
+    ];
+    var nextBtn;
+    slots.forEach(function(sl){
+      var field = h("input",{type:"text",value:S.pick[sl[0]],placeholder:"Deine Formulierung …","aria-label":sl[2]});
+      field.addEventListener("input",function(){ S.pick[sl[0]] = field.value; save(); nextBtn.disabled = !filled([S.pick.tU,S.pick.tZ,S.pick.pU,S.pick.pZ]); });
+      out.push(h("div",{class:"slotpick"},[ h("h3",{},[h("span",{class:"sym",text:sl[1]}),h("span",{text:sl[2]})]), field ]));
+    });
+    var n = nav(4,"Weiter zum Visionssatz", filled([S.pick.tU,S.pick.tZ,S.pick.pU,S.pick.pZ]), function(){ go(6); });
+    nextBtn = n.querySelector(".right .btn");
+    out.push(n);
+    return out;
+  }
+
+  // ---------- Visionssätze ----------
+  var COMBOS = [
+    ["pU","tU", CIRCLE+" Personen umkreist + "+CIRCLE+" Thema umkreist"],
+    ["pU","tZ", CIRCLE+" Personen umkreist + "+TRI+" Thema zugespitzt"],
+    ["pZ","tU", TRI+" Personen zugespitzt + "+CIRCLE+" Thema umkreist"],
+    ["pZ","tZ", TRI+" Personen zugespitzt + "+TRI+" Thema zugespitzt"]
+  ];
+  function promptVision(){
+    var lines = COMBOS.map(function(c,i){ return "Kombination "+(i+1)+": Personengruppe „"+S.pick[c[0]].trim()+"“ + Thema „"+S.pick[c[1]].trim()+"“"; }).join("\n");
+    return "Ich mache gerade ein christliches Onboarding-Programm meiner Kirche und formuliere einen ersten Visionssatz für meinen „Traum“ – die Leidenschaft, die Gott mir ins Herz gelegt hat.\n\n" +
+"Die Grundform lautet: „Ich helfe [Personengruppe] dabei, [Thema als konkrete Tätigkeit oder Veränderung] …“\n" +
+"Beispiel: Personengruppe „alleinerziehende Mütter“ + Thema „gesunde Ernährung im Alltag“ → „Ich helfe alleinerziehenden Müttern dabei, mit wenig Zeit gesund für ihre Familie zu kochen.“\n\n" +
+"Formuliere für jede dieser 4 Kombinationen genau 2 unterschiedliche Visionssätze:\n" + lines + "\n\n" +
+"Regeln: Jeder Satz beginnt mit „Ich helfe“, enthält „dabei,“ und ist ein einziger Satz mit höchstens 25 Wörtern. Achte auf korrekte Grammatik (Dativ nach „helfen“). Mach aus dem Thema eine lebendige, konkrete Tätigkeit. Formuliere hoffnungsvoll und schlicht, ohne Floskeln. Ein kurzes Warum am Ende („…, damit …“) ist erlaubt, wenn es natürlich passt.\n\n" +
+"Antworte genau in dieser Form, ohne lange Einleitung:\n\n" +
+"Kombination 1:\na) …\nb) …\n\nKombination 2:\na) …\nb) …\n\nKombination 3:\na) …\nb) …\n\nKombination 4:\na) …\nb) …";
+  }
+
+  function viewVision(){
+    var out = header().concat([
+      h("h1",{text:"Dein Visionssatz"}),
+      h("p",{text:"Aus deinen Mustern entstehen jetzt erste Versionen deines Visionssatzes. Die vier Kombinationen zeigen deinen Traum aus verschiedenen Blickwinkeln – von weit bis ganz konkret."}),
+      h("div",{class:"card"},[h("dl",{class:"sheet"},[
+        h("dt",{text:CIRCLE+" Personen"}),h("dd",{text:S.pick.pU}),
+        h("dt",{text:TRI+" Personen"}),h("dd",{text:S.pick.pZ}),
+        h("dt",{text:CIRCLE+" Thema"}),h("dd",{text:S.pick.tU}),
+        h("dt",{text:TRI+" Thema"}),h("dd",{text:S.pick.tZ})
+      ])]),
+      h("h2",{text:"Lass dir von einer KI helfen"}),
+      promptBox(promptVision()),
+      h("h2",{text:"Dein Satz in deinen Worten"}),
+      h("p",{class:"muted small",text:"Welcher Satz berührt dich am meisten? Trag ihn hier ein und bring ihn in deine eigenen Worte. Grundform: „Ich helfe [Personengruppe] dabei, [Thema] …“"})
+    ]);
+    var nextBtn;
+    var field = h("textarea",{class:"prompt own",rows:"3",placeholder:"Ich helfe … dabei, …","aria-label":"Dein Visionssatz"});
+    field.value = S.favText || "";
+    field.addEventListener("input",function(){ S.favText = field.value; save(); nextBtn.disabled = !S.favText.trim(); });
+    out.push(field);
+    var n = nav(5,"Abschließen", !!(S.favText||"").trim(), function(){ go(7); });
+    nextBtn = n.querySelector(".right .btn");
+    out.push(n);
+    return out;
+  }
+
+  // ---------- Zusammenfassung ----------
+  function viewSummary(){
+    return header().concat([
+      h("h1",{text:"Dein Traum"}),
+      h("div",{class:"favorite"},[h("div",{class:"sentence",text:"„"+S.favText.trim()+"“"}),h("div",{class:"small",text:"Erste Version deines Visionssatzes"})]),
+      h("p",{text:"Das ist ein Anfang. Nimm den Satz mit ins Gebet, sprich mit Menschen, die dich kennen, darüber und schärfe ihn mit der Zeit weiter. Ein guter Visionssatz lässt dein Herz schneller schlagen."}),
+      h("div",{class:"recap",style:"margin-top:22px"},[
+        h("div",{class:"card"},[h("h3",{text:"Top 3 Themen"}),h("ol",{},S.tTop.map(function(x){return h("li",{text:x});}))]),
+        h("div",{class:"card"},[h("h3",{text:"Top 3 Personengruppen"}),h("ol",{},S.pTop.map(function(x){return h("li",{text:x});}))])
+      ]),
+      h("div",{class:"card"},[h("dl",{class:"sheet"},[
+        h("dt",{text:CIRCLE+" Personen"}),h("dd",{text:S.pick.pU}),
+        h("dt",{text:TRI+" Personen"}),h("dd",{text:S.pick.pZ}),
+        h("dt",{text:CIRCLE+" Thema"}),h("dd",{text:S.pick.tU}),
+        h("dt",{text:TRI+" Thema"}),h("dd",{text:S.pick.tZ})
+      ])]),
+      h("p",{class:"muted small",text:"Tipp: Mach einen Screenshot von dieser Seite oder schreib dir deinen Satz auf. Deine Eingaben bleiben auf diesem Gerät gespeichert."}),
+      h("div",{class:"nav"},[
+        h("button",{class:"btn ghost",onclick:function(){ go(6); },text:"Satz bearbeiten"}),
+        h("div",{class:"right"},[h("button",{class:"btn ghost",onclick:function(){ S = fresh(); save(); go(0); },text:"Neu starten"}),h("button",{class:"btn","data-hub":"1",text:"Weiter zur Übersicht"})])
+      ])
+    ]);
+  }
+
+  function render(){
+    var app = document.getElementById("t-app");
+    var active = document.activeElement, activeLabel = active && active.getAttribute && active.getAttribute("aria-label");
+    app.innerHTML = "";
+    var v = [viewIntro, function(){return viewSelect("t");}, function(){return viewTop("t");}, function(){return viewSelect("p");}, function(){return viewTop("p");}, viewMuster, viewVision, viewSummary][S.step]();
+    v.forEach(function(n){ if(n) app.appendChild(n); });
+  }
+  window.OB_TRAUM = { state:function(){ return S; } };
+  render();
+})();
+</script>
+<script>
+(function(){
+  // ================= HUB =================
+  var SCREENS = ["hub","m-disg","m-gaben","m-traum","m-summary"];
+  function el(id){ return document.getElementById(id); }
+  function status(){
+    var d = window.OB_DISG, g = window.OB_GABEN, t = window.OB_TRAUM;
+    var ds = d.state(), gs = g.state(), ts = t.state();
+    var dDone = ds.answers && ds.answers.length===10 && ds.answers.every(function(a){ return a && a.length===4; });
+    var dStarted = ds.answers && ds.answers.some(function(a){ return a && a.length; });
+    var gCount = (gs.a||[]).filter(function(v){ return v!==null && v!==undefined; }).length;
+    var tDone = !!((ts.favText||"").trim() && ts.pick && ts.pick.pU && ts.pick.pZ && ts.pick.tU && ts.pick.tZ);
+    var tStarted = ts.step>0 || (ts.tSel||[]).length>0;
+    return {
+      disg: dDone ? "done" : dStarted ? "progress" : "new",
+      gaben: gCount===141 ? "done" : gCount>0 ? "progress" : "new",
+      traum: tDone ? "done" : tStarted ? "progress" : "new",
+      gCount: gCount
+    };
+  }
+  var LABEL = { done:"Abgeschlossen ✓", progress:"Angefangen", "new":"Noch nicht begonnen" };
+
+  window.OB_show = function(name){
+    SCREENS.forEach(function(s){ el(s).classList.toggle("hidden", s!==name); });
+    if (name==="hub") renderHub();
+    if (name==="m-summary") renderSummary();
+    window.scrollTo(0,0);
+  };
+  document.addEventListener("click", function(e){
+    var b = e.target.closest("[data-hub]"); if (b){ window.OB_show("hub"); return; }
+    var o = e.target.closest("[data-open]"); if (o){ window.OB_show(o.getAttribute("data-open")); }
+  });
+
+  function renderHub(){
+    var st = status();
+    var mods = [
+      ["m-disg","1","Typ","Wie tickst du? Der DISG-Test zeigt deine Persönlichkeit.","ca. 5 Min.",st.disg],
+      ["m-gaben","2","Talent","Welche Gaben hat Gott dir geschenkt? 141 Aussagen zu 23 Gaben.","ca. 20 Min.",st.gaben],
+      ["m-traum","3","Traum","Für welche Themen und Menschen schlägt dein Herz?","ca. 20 Min.",st.traum]
+    ];
+    var all = st.disg==="done" && st.gaben==="done" && st.traum==="done";
+    var html = mods.map(function(m){
+      return '<button class="modcard" data-open="'+m[0]+'"><span class="modnum">'+m[1]+'</span><span class="modbody"><span class="modtitle">'+m[2]+'</span><span class="moddesc">'+m[3]+'</span><span class="modmeta"><span class="pill '+m[5]+'">'+LABEL[m[5]]+(m[0]==="m-gaben"&&m[5]==="progress"?' · '+st.gCount+'/141':'')+'</span><span>'+m[4]+'</span></span></span></button>';
+    }).join("");
+    html += '<button class="modcard final'+(all?'':' locked')+'" data-open="m-summary"><span class="modnum">✦</span><span class="modbody"><span class="modtitle">Gesamtergebnis</span><span class="moddesc">'+(all ? 'Alle Ergebnisse auf einen Blick – und dein ausführlicher Visionssatz.' : 'Wird freigeschaltet, sobald du alle drei Tests abgeschlossen hast.')+'</span></span></button>';
+    el("modlist").innerHTML = html;
+    renderVisionCard();
+  }
+
+  // ================= SUMMARY =================
+  var TYPE_ADJ = { 0:["entschlossen","zielstrebig","mutig"], 1:["begeisternd","herzlich","inspirierend"], 2:["geduldig","verlässlich","einfühlsam"], 3:["sorgfältig","durchdacht","strukturiert"] };
+  var TYPE_NAME = ["Dominant","Initiativ","Stetig","Gewissenhaft"];
+  // DISG-Begriffe → passend für „auf … Art und Weise“ (null = weglassen)
+  var WORD_MAP = { "beliebt":null, "teamfähig":null, "kontrollierend":null, "unauffällig":null, "schnell":null, "impulsiv":null, "kritisch":null,
+    "begeistert":"begeisternd", "nachdenkend":"nachdenklich", "planend":"planvoll", "ergebnisorientiert":"ergebnisorientiert", "selbstdiszipliniert":"diszipliniert" };
+  var GIFT_ADJ = ["strukturiert","visionär","praktisch","kreativ","klarsichtig","ermutigend","einladend","vertrauensvoll","großzügig","hilfsbereit","gastfreundlich","geistlich","tiefgründig","zielgerichtet","barmherzig","ehrlich","fürsorglich","verständlich","weise","heilsam",null,"glaubensvoll",null];
+  // pron: true → „indem ich sie … VERB“; full = Form ohne vorgezogenes „sie“
+  var GIFT_VERB = [
+    {verb:"Abläufe für sie organisiere"},{verb:"Neues für sie aufbaue"},{verb:"mit meinen Händen für sie anpacke"},{verb:"kreative Wege für sie gestalte"},
+    {verb:"ihnen geistliche Orientierung gebe"},{pron:true,verb:"ermutige"},{verb:"ihnen von Jesus erzähle"},{pron:true,verb:"zu mutigen Glaubensschritten herausfordere"},
+    {pron:true,verb:"großzügig unterstütze"},{pron:true,verb:"praktisch unterstütze"},{pron:true,verb:"willkommen heiße"},{pron:true,verb:"im Gebet trage"},
+    {verb:"ihnen biblische Zusammenhänge erschließe"},{pron:true,verb:"anleite"},{pron:true,verb:"mitfühlend begleite"},{verb:"ihnen Gottes Wahrheit zuspreche"},
+    {pron:true,verb:"langfristig begleite"},{verb:"ihnen Wissen verständlich weitergebe"},{pron:true,verb:"berate"},
+    {verb:"für ihre Heilung bete"},null,{verb:"mit Gottes übernatürlichem Wirken rechne"},null
+  ];
+  function vFull(v){ return v.pron ? "sie " + v.verb : v.verb; }
+
+  var SKEY = "ob-summary-v1";
+  var B = { adj:[], verbs:[], damit:"", weil:"", final:"", phase:"build", training:"", firstStep:"", mentor:"", committed:null };
+  try{ var r = JSON.parse(localStorage.getItem(SKEY)); if (r) B = Object.assign(B, r); }catch(e){}
+  function saveB(){ try{ localStorage.setItem(SKEY, JSON.stringify(B)); }catch(e){} }
+
+  function h(tag, attrs, kids){
+    var n = document.createElement(tag);
+    if (attrs) for (var k in attrs){
+      if (k==="text") n.textContent = attrs[k];
+      else if (k==="html") n.innerHTML = attrs[k];
+      else if (k.slice(0,2)==="on") n.addEventListener(k.slice(2), attrs[k]);
+      else if (attrs[k]!==null && attrs[k]!==undefined && attrs[k]!==false) n.setAttribute(k, attrs[k]===true?"":attrs[k]);
+    }
+    (kids||[]).forEach(function(c){ if(c) n.appendChild(typeof c==="string" ? document.createTextNode(c) : c); });
+    return n;
+  }
+  function joinList(a){ return a.length<2 ? (a[0]||"") : a.slice(0,-1).join(", ") + " und " + a[a.length-1]; }
+  function inflect(a){ return /e$/.test(a) ? a : a + "e"; }
+
+  function collect(){
+    var d = window.OB_DISG, g = window.OB_GABEN, t = window.OB_TRAUM;
+    var ds = d.state(), rows = d.rows;
+    var disg = [0,0,0,0], words = [];
+    ds.answers.forEach(function(a, r){ a.forEach(function(col,pos){ disg[col] += 4-pos; }); words.push(rows[r][a[0]]); });
+    var order = [0,1,2,3].sort(function(a,b){ return disg[b]-disg[a]; });
+    var sc = g.scores(), gifts = g.gifts;
+    var idx = []; for (var i=0;i<19;i++) idx.push(i);
+    idx.sort(function(a,b){ return sc[b]-sc[a] || a-b; });
+    var top = idx.slice(0,5);
+    var sup = [19,20,21,22], maxS = Math.max.apply(null, sup.map(function(x){ return sc[x]; }));
+    var stars = maxS>=6 ? sup.filter(function(x){ return sc[x]===maxS; }) : [];
+    return { disg:disg, order:order, words:words, sc:sc, gifts:gifts, top:top, stars:stars, t:t.state() };
+  }
+
+  function parseVision(s){
+    var m = /^\s*Ich helfe\s+(.+?)\s+dabei,\s*(.+?)[\s.!]*$/i.exec(s||"");
+    return m ? { persons:m[1], goal:m[2] } : null;
+  }
+
+  function buildSentence(){
+    var base = ((window.OB_TRAUM.state().favText)||"").trim().replace(/[.!\s]+$/,"");
+    if (!base) return "";
+    var s = base;
+    var adv = B.adj.length ? "auf " + joinList(B.adj.map(inflect)) + " Art und Weise" : "";
+    var vs = B.verbs.map(function(i){ return GIFT_VERB[i]; }).filter(Boolean);
+    if (vs.length){
+      var v1 = vs[0], v2 = vs[1];
+      var part = v1.pron ? "sie " + (adv ? adv + " " : "") + v1.verb : (adv ? adv + " " : "") + v1.verb;
+      if (v2) part += " und " + (v1.pron && v2.pron ? v2.verb : vFull(v2));
+      s += ", indem ich " + part;
+    } else if (adv) {
+      s += " – " + adv;
+    }
+    var dm = B.damit.trim().replace(/^damit\s+/i,"").replace(/[.!\s]+$/,"");
+    if (dm) s += ", damit " + dm;
+    var wl = B.weil.trim().replace(/^weil\s+/i,"").replace(/[.!\s]+$/,"");
+    if (wl) s += ", weil " + wl;
+    return s + ".";
+  }
+
+  function copyText(text, btn, ta){
+    function ok(){ btn.textContent = "Kopiert ✓"; setTimeout(function(){ btn.textContent = "Prompt kopieren"; }, 2200); }
+    function fallback(){
+      try{ ta.focus(); ta.select(); ta.setSelectionRange(0, ta.value.length); if (document.execCommand("copy")) { ok(); return; } }catch(e){}
+      btn.textContent = "Bitte Text markieren und kopieren";
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(ok, fallback); else fallback();
+  }
+
+  function promptAll(R){
+    var t = R.t, G = R.gifts;
+    var lines = [];
+    lines.push("Ich habe im Onboarding-Programm meiner Kirche drei Tests gemacht, um meine persönliche Berufung zu entdecken. Hier sind meine Ergebnisse:");
+    lines.push("");
+    lines.push("1) PERSÖNLICHKEITSTYP (DISG, je 10–40 Punkte):");
+    lines.push("Dominant " + R.disg[0] + " · Initiativ " + R.disg[1] + " · Stetig " + R.disg[2] + " · Gewissenhaft " + R.disg[3]);
+    lines.push("Am stärksten ausgeprägt: " + TYPE_NAME[R.order[0]] + ", gefolgt von " + TYPE_NAME[R.order[1]] + ".");
+    lines.push("Begriffe, die am meisten auf mich zutreffen: " + R.words.join(", ") + ".");
+    lines.push("");
+    lines.push("2) GABENTEST – meine Top-5-Gaben:");
+    R.top.forEach(function(i,n){ lines.push((n+1) + ". " + G[i][1] + " (" + R.sc[i] + " von 35 Punkten)"); });
+    if (R.stars.length) lines.push("Übernatürliche Geistesgabe: " + R.stars.map(function(i){ return G[i][1] + " (" + R.sc[i] + " von 10)"; }).join(", "));
+    lines.push("");
+    lines.push("3) TRAUM:");
+    lines.push("Top 3 Traum-Themen: " + t.tTop.map(function(x){return x.trim();}).join(", "));
+    lines.push("Top 3 Traum-Personengruppen: " + t.pTop.map(function(x){return x.trim();}).join(", "));
+    lines.push("Personengruppe umkreist: " + t.pick.pU + " · zugespitzt: " + t.pick.pZ);
+    lines.push("Thema umkreist: " + t.pick.tU + " · zugespitzt: " + t.pick.tZ);
+    lines.push("Mein Visionssatz (Kurzform): „" + (t.favText||"").trim() + "“");
+    var draft = (B.final || buildSentence()).trim();
+    if (draft) lines.push("Mein ausführlicher Entwurf: „" + draft + "“");
+    lines.push("");
+    lines.push("AUFGABE: Formuliere 5 ausführliche Versionen meines Visionssatzes (je 35–60 Wörter, ein oder höchstens zwei Sätze).");
+    lines.push("Grundform: „Ich helfe [Personengruppe] dabei, [Thema/Ziel], indem ich sie auf [Eigenschaften aus meinem Typ und meinen Gaben] Art und Weise [Tätigkeit passend zu meinen Gaben] …“");
+    lines.push("Ergänze passende Nebensätze (z. B. „damit …“, „sodass …“, „weil …“), die zeigen, welche Veränderung bei den Menschen entsteht.");
+    lines.push("");
+    lines.push("Regeln:");
+    lines.push("- Nutze konkret meine Ergebnisse: Personengruppe und Thema aus dem Traum-Test, Eigenschaften aus Typ- und Gabentest, Tätigkeiten aus meinen Top-Gaben.");
+    lines.push("- Jede Version setzt einen anderen Schwerpunkt, z. B. Persönlichkeit, Gaben, Wirkung/Veränderung, geistliche Dimension, Alltag.");
+    lines.push("- Korrekte deutsche Grammatik (Dativ nach „helfen“), hoffnungsvoll, persönlich, schlicht – ohne Floskeln und ohne etwas zu erfinden, das nicht zu meinen Ergebnissen passt.");
+    lines.push("");
+    lines.push("Antworte in dieser Form:");
+    lines.push("Version 1 – [Schwerpunkt]:");
+    lines.push("[Visionssatz]");
+    lines.push("(Darin stecken: [welche Ergebnisse, eine Zeile])");
+    lines.push("… bis Version 5.");
+    lines.push("");
+    lines.push("Stell mir zum Schluss eine Frage, die mir hilft, meinen Visionssatz weiter zu schärfen.");
+    return lines.join("\n");
+  }
+
+  function renderSummary(){
+    var box = el("sum-app"); box.innerHTML = "";
+    var st = status();
+    var missing = [];
+    if (st.disg!=="done") missing.push(["m-disg","Typ (DISG-Test)"]);
+    if (st.gaben!=="done") missing.push(["m-gaben","Talent (Gabentest)"]);
+    if (st.traum!=="done") missing.push(["m-traum","Traum"]);
+    if (missing.length){
+      box.appendChild(h("h1",{text:"Gesamtergebnis"}));
+      box.appendChild(h("p",{text:"Dein Gesamtergebnis wird freigeschaltet, sobald du alle drei Tests abgeschlossen hast. Es fehlt noch:"}));
+      missing.forEach(function(m){ box.appendChild(h("button",{class:"btn ghost",style:"margin:0 10px 10px 0","data-open":m[0],text:m[1]})); });
+      return;
+    }
+    var R = collect(), G = R.gifts, t = R.t;
+    if (B.phase==="plan" && (B.final||"").trim()){ renderPlan(box, R); return; }
+    box.appendChild(stepper(1));
+    box.appendChild(h("h1",{text:"Dein Gesamtergebnis"}));
+    box.appendChild(h("p",{text:"Hier kommt alles zusammen: wer du bist, was Gott dir geschenkt hat und wofür dein Herz schlägt."}));
+
+    // --- Übersicht Typ
+    var maxD = Math.max.apply(null,R.disg);
+    box.appendChild(h("div",{class:"card sumcard"},[
+      h("div",{class:"sumhead"},[h("span",{class:"sumnum",text:"1"}),h("h3",{text:"Typ"})]),
+      h("p",{html:"Am stärksten: <strong>"+TYPE_NAME[R.order[0]]+"</strong>, gefolgt von "+TYPE_NAME[R.order[1]]+"."}),
+      h("div",{class:"minibars"}, [0,1,2,3].map(function(i){
+        return h("div",{class:"mb"+(R.disg[i]===maxD?" top":"")},[h("span",{class:"l",text:"DISG"[i]}),h("span",{class:"b"},[h("i",{style:"width:"+((R.disg[i]-10)/30*100)+"%"})]),h("span",{class:"v",text:String(R.disg[i])})]);
+      })),
+      h("p",{class:"small muted",style:"margin:12px 0 0",text:"Deine stärksten Begriffe: " + R.words.join(", ")})
+    ]));
+    // --- Übersicht Talent
+    box.appendChild(h("div",{class:"card sumcard"},[
+      h("div",{class:"sumhead"},[h("span",{class:"sumnum",text:"2"}),h("h3",{text:"Talent"})]),
+      h("ol",{class:"sumlist"}, R.top.map(function(i){ return h("li",{},[h("strong",{text:G[i][1]}),h("span",{class:"muted",text:" · "+R.sc[i]+"/35"})]); })),
+      R.stars.length ? h("p",{class:"small",style:"margin:10px 0 0",text:"✱ Übernatürliche Geistesgabe: " + R.stars.map(function(i){ return G[i][1]; }).join(", ")}) : null
+    ]));
+    // --- Übersicht Traum
+    box.appendChild(h("div",{class:"card sumcard"},[
+      h("div",{class:"sumhead"},[h("span",{class:"sumnum",text:"3"}),h("h3",{text:"Traum"})]),
+      h("dl",{class:"sheet"},[
+        h("dt",{text:"Themen"}),h("dd",{text:t.tTop.join(", ")}),
+        h("dt",{text:"Personen"}),h("dd",{text:t.pTop.join(", ")}),
+        h("dt",{text:"● Personen"}),h("dd",{text:t.pick.pU}),
+        h("dt",{text:"▼ Personen"}),h("dd",{text:t.pick.pZ}),
+        h("dt",{text:"● Thema"}),h("dd",{text:t.pick.tU}),
+        h("dt",{text:"▼ Thema"}),h("dd",{text:t.pick.tZ})
+      ]),
+    ]));
+
+    // --- Baukasten
+    box.appendChild(h("h2",{text:"Dein Visionssatz – ausführlich"}));
+    box.appendChild(h("p",{text:"Jetzt ergänzt du deinen Visionssatz aus dem Traum-Test um das, was dich ausmacht: Auf welche Art hilfst du, durch welche Gaben – und was soll dadurch entstehen?"}));
+    box.appendChild(h("div",{class:"card"},[h("div",{class:"small muted",text:"Dein Visionssatz aus Teil 3"}),h("p",{class:"sentence",style:"margin:6px 0 0",text:"„"+(t.favText||"").trim()+"“"})]));
+    var preview = h("div",{class:"favorite"},[h("div",{class:"sentence"}),h("div",{class:"small",text:"Vorschau"})]);
+    function upd(){ var s = buildSentence(); preview.firstChild.textContent = s ? "„"+s+"“" : "Im Traum-Test fehlt noch dein Visionssatz."; }
+
+    function field(label, key, ph, hint){
+      var i = h("input",{type:"text",value:B[key],placeholder:ph,"aria-label":label});
+      i.addEventListener("input",function(){ B[key] = i.value; saveB(); upd(); });
+      return h("div",{class:"bfield"},[h("label",{class:"blabel",text:label}), i, hint ? h("div",{class:"small muted",text:hint}) : null]);
+    }
+    // Adjektive
+    var adjSet = [];
+    function addAdj(a, src){ if (!a) return; if (!adjSet.some(function(x){ return x[0]===a; })) adjSet.push([a,src]); }
+    R.words.forEach(function(w){ var m = WORD_MAP.hasOwnProperty(w) ? WORD_MAP[w] : w; addAdj(m,"typ"); });
+    R.order.slice(0,2).forEach(function(ti){ TYPE_ADJ[ti].forEach(function(a){ addAdj(a,"typ"); }); });
+    R.top.concat(R.stars).forEach(function(i){ addAdj(GIFT_ADJ[i],"gabe"); });
+    B.adj = B.adj.filter(function(a){ return adjSet.some(function(x){ return x[0]===a; }); });
+    function chipGroup(title, items, isOn, toggle){
+      return h("div",{class:"group"},[h("h3",{text:title}), h("div",{class:"chips"}, items.map(function(it){
+        return h("button",{type:"button",class:"chip","aria-pressed":String(isOn(it)),text:it.label,onclick:function(ev){ toggle(it); saveB(); ev.currentTarget.setAttribute("aria-pressed", String(isOn(it))); refreshChips(); upd(); }});
+      }))]);
+    }
+    var adjWrap = h("div",{class:"bblock"},[h("label",{class:"blabel",text:"… auf welche Art und Weise? (bis zu 3)"})]);
+    var adjItems = function(src){ return adjSet.filter(function(x){ return x[1]===src; }).map(function(x){ return {label:x[0], val:x[0]}; }); };
+    function toggleAdj(it){ var k = B.adj.indexOf(it.val); if (k>-1) B.adj.splice(k,1); else if (B.adj.length<3) B.adj.push(it.val); }
+    adjWrap.appendChild(chipGroup("Aus deinem Typ-Test", adjItems("typ"), function(it){ return B.adj.indexOf(it.val)>-1; }, toggleAdj));
+    adjWrap.appendChild(chipGroup("Aus deinem Gabentest", adjItems("gabe"), function(it){ return B.adj.indexOf(it.val)>-1; }, toggleAdj));
+    box.appendChild(adjWrap);
+
+    // Verben
+    var verbIdx = R.top.concat(R.stars).filter(function(i){ return GIFT_VERB[i]; });
+    B.verbs = B.verbs.filter(function(i){ return verbIdx.indexOf(i)>-1; });
+    var verbWrap = h("div",{class:"bblock"},[h("label",{class:"blabel",text:"… indem ich (bis zu 2, passend zu deinen Gaben)"})]);
+    verbWrap.appendChild(chipGroup("", verbIdx.map(function(i){ return {label: vFull(GIFT_VERB[i]) + " (" + G[i][1] + ")", val:i}; }),
+      function(it){ return B.verbs.indexOf(it.val)>-1; },
+      function(it){ var k = B.verbs.indexOf(it.val); if (k>-1) B.verbs.splice(k,1); else if (B.verbs.length<2) B.verbs.push(it.val); }));
+    box.appendChild(verbWrap);
+    function refreshChips(){
+      adjWrap.querySelectorAll(".chip").forEach(function(c){ c.disabled = c.getAttribute("aria-pressed")!=="true" && B.adj.length>=3; });
+      verbWrap.querySelectorAll(".chip").forEach(function(c){ c.disabled = c.getAttribute("aria-pressed")!=="true" && B.verbs.length>=2; });
+    }
+
+    box.appendChild(h("div",{class:"builder"},[
+      field("…, damit … (optional)","damit","z. B. sie Gottes Liebe ganz praktisch erleben","Welche Veränderung soll bei den Menschen entstehen?"),
+      field("…, weil … (optional)","weil","z. B. jeder Mensch wertvoll ist und eine Zukunft verdient","Was ist deine Motivation – warum liegt dir das am Herzen?")
+    ]));
+    box.appendChild(preview);
+    upd(); refreshChips();
+
+    // Prompt (optional)
+    box.appendChild(h("h2",{text:"Mehr Versionen mit einer KI (optional)"}));
+    var pta = h("textarea",{class:"prompt",readonly:true,rows:"8","aria-label":"Prompt zum Kopieren"});
+    var pbtn = h("button",{class:"btn small",type:"button",text:"Prompt kopieren"});
+    function refreshPrompt(){ pta.value = promptAll(R); }
+    refreshPrompt();
+    pbtn.addEventListener("click",function(){ refreshPrompt(); copyText(pta.value, pbtn, pta); });
+    box.appendChild(h("div",{class:"aibox"},[
+      h("ol",{class:"aisteps"},[
+        h("li",{text:"Kopiere den Text unten. Alle Ergebnisse deiner drei Tests sind schon enthalten – und dein Entwurf aus der Vorschau."}),
+        h("li",{text:"Füge ihn in eine KI deiner Wahl ein, z. B. ChatGPT, Claude, Gemini oder Microsoft Copilot."}),
+        h("li",{text:"Du bekommst 5 ausführliche Versionen. Kopiere die Version, die dich berührt, in das Feld unten."})
+      ]), pbtn, pta
+    ]));
+
+    // Entscheidung
+    box.appendChild(h("h2",{text:"Entscheide dich für deinen Visionssatz"}));
+    box.appendChild(h("p",{text:"Welcher Satz beschreibt deine Vision am besten? Übernimm die Vorschau, füge eine KI-Version ein oder formuliere selbst – so, dass dein Herz schneller schlägt. Dieser Satz wird dein aktueller Visionssatz."}));
+    var ta = h("textarea",{class:"prompt own",rows:"5",placeholder:"Dein finaler, ausführlicher Visionssatz …","aria-label":"Dein finaler Visionssatz"});
+    ta.value = B.final || "";
+    var commitBtn = h("button",{class:"btn",text:"Diesen Satz festlegen",disabled:!(B.final||"").trim(),onclick:function(){
+      if (!(B.final||"").trim()) return;
+      B.phase = "plan"; saveB(); renderSummary(); window.scrollTo(0,0);
+    }});
+    ta.addEventListener("input",function(){ B.final = ta.value; saveB(); commitBtn.disabled = !ta.value.trim(); });
+    box.appendChild(h("button",{class:"btn small ghost",style:"margin-bottom:4px",text:"Vorschau übernehmen",onclick:function(){ var s = buildSentence(); if (s){ ta.value = s; B.final = s; saveB(); commitBtn.disabled = false; ta.focus(); } }}));
+    box.appendChild(ta);
+    box.appendChild(h("div",{class:"nav"},[
+      h("button",{class:"btn ghost","data-hub":"1",text:"Zur Übersicht"}),
+      h("div",{class:"right"},[commitBtn])
+    ]));
+  }
+
+  // ---------- Stepper ----------
+  function stepper(n){
+    return h("div",{class:"stepper"},[
+      h("span",{class: n===1 ? "on" : "done",text:(n>1?"✓ ":"1 ")+"Visionssatz"}),
+      h("span",{class:"sep",text:"→"}),
+      h("span",{class: n===2 ? "on" : "",text:"2 Umsetzung"})
+    ]);
+  }
+
+  // ---------- Umsetzung ----------
+  var TRAIN_IDEAS = [
+    "In einem Dienstbereich der Gemeinde mitarbeiten",
+    "Bei einem Team hospitieren und zuschauen",
+    "Eine Kleingruppe besuchen oder mitgestalten",
+    "Eine Schulung oder ein Seminar besuchen",
+    "Ein Buch lesen oder einen Podcast zum Thema hören",
+    "Gezielt Zeit mit Menschen aus meiner Zielgruppe verbringen",
+    "Mich ehrenamtlich außerhalb der Gemeinde engagieren",
+    "Mir einen Mentor oder eine Mentorin suchen",
+    "Regelmäßig für meine Vision beten"
+  ];
+  function promptPlan(R){
+    var G = R.gifts, t = R.t;
+    return [
+      "Ich habe im Onboarding-Programm meiner Kirche meine Berufung erkundet. Mein aktueller Visionssatz lautet:",
+      "„" + B.final.trim() + "“",
+      "",
+      "Meine Ergebnisse dazu:",
+      "- Persönlichkeitstyp (DISG): am stärksten " + TYPE_NAME[R.order[0]] + ", gefolgt von " + TYPE_NAME[R.order[1]] + ".",
+      "- Top-5-Gaben: " + R.top.map(function(i){ return G[i][1]; }).join(", ") + (R.stars.length ? " · übernatürliche Gabe: " + R.stars.map(function(i){ return G[i][1]; }).join(", ") : "") + ".",
+      "- Traum: Personengruppe „" + t.pick.pZ + "“, Thema „" + t.pick.tZ + "“.",
+      "",
+      "Hilf mir, diese Vision Schritt für Schritt umzusetzen:",
+      "1. Nenne 5–7 konkrete Trainingsfelder, in denen ich meine Gaben schon jetzt einüben kann – in der Gemeinde, im Alltag und im Beruf. Je Trainingsfeld ein Satz, warum es zu mir passt.",
+      "2. Schlage 3 kleine, machbare erste Schritte für die nächsten 30 Tage vor.",
+      "3. Beschreibe, wie es nach 6–12 Monaten aussehen könnte, wenn ich dranbleibe.",
+      "4. Stell mir 3 Fragen, die ich mit meinem Mentor oder meiner Mentorin besprechen kann.",
+      "",
+      "Antworte auf Deutsch, ermutigend, praktisch und ohne Floskeln. Halte die Vorschläge realistisch für jemanden, der das neben Beruf und Familie macht."
+    ].join("\n");
+  }
+
+  function renderPlan(box, R){
+    box.appendChild(stepper(2));
+    box.appendChild(h("h1",{text:"Deine Vision umsetzen"}));
+    box.appendChild(h("div",{class:"favorite"},[
+      h("div",{class:"sentence",text:"„" + B.final.trim() + "“"}),
+      h("div",{class:"small",text:"Dein Visionssatz"})
+    ]));
+    box.appendChild(h("button",{class:"link",style:"margin-top:-6px",text:"Satz noch einmal ändern",onclick:function(){ B.phase="build"; saveB(); renderSummary(); window.scrollTo(0,0); }}));
+    box.appendChild(h("p",{style:"margin-top:18px",text:"Eine Vision wächst, wenn du sie Schritt für Schritt einübst. Du musst nicht warten, bis alles perfekt ist – fang dort an, wo du heute schon stehst."}));
+
+    var doneBtn;
+    function check(){ doneBtn.disabled = !(B.training.trim() || B.firstStep.trim()); }
+
+    // Trainingsfelder
+    var tr = h("textarea",{class:"prompt note",rows:"5",placeholder:"z. B. im Welcome-Team mitarbeiten, einen Hauskreis für junge Paare starten …","aria-label":"Deine Trainingsfelder"});
+    tr.value = B.training;
+    tr.addEventListener("input",function(){ B.training = tr.value; saveB(); check(); });
+    var ideas = h("div",{class:"chips"}, TRAIN_IDEAS.map(function(idea){
+      return h("button",{type:"button",class:"chip",text:"+ " + idea,onclick:function(){
+        var line = "• " + idea;
+        if (B.training.indexOf(line) > -1) return;
+        B.training = (B.training.trim() ? B.training.replace(/\s+$/,"") + "\n" : "") + line;
+        tr.value = B.training; saveB(); check();
+      }});
+    }));
+    box.appendChild(h("div",{class:"bblock"},[
+      h("label",{class:"blabel",text:"Welche Trainingsfelder kannst du jetzt schon angehen?"}),
+      h("p",{class:"small muted",text:"Wo kannst du deine Gaben ausprobieren und einüben – in der Gemeinde, im Alltag, im Beruf? Tippe Ideen an oder schreib eigene."}),
+      ideas, tr
+    ]));
+
+    // Erster Schritt
+    var fs = h("textarea",{class:"prompt note",rows:"2",placeholder:"z. B. Bis Ende Oktober spreche ich mit der Leitung vom Welcome-Team.","aria-label":"Dein erster Schritt"});
+    fs.value = B.firstStep;
+    fs.addEventListener("input",function(){ B.firstStep = fs.value; saveB(); check(); });
+    box.appendChild(h("div",{class:"bblock"},[
+      h("label",{class:"blabel",text:"Was ist dein erster konkreter Schritt – und bis wann?"}),
+      fs
+    ]));
+
+    // Begleitung
+    var mt = h("input",{type:"text",value:B.mentor,placeholder:"z. B. mein Mentor, meine Kleingruppe, eine Freundin …","aria-label":"Wer begleitet dich?"});
+    mt.addEventListener("input",function(){ B.mentor = mt.value; saveB(); });
+    box.appendChild(h("div",{class:"bblock"},[
+      h("label",{class:"blabel",text:"Wer kann dich dabei begleiten oder ermutigen?"}),
+      mt
+    ]));
+
+    // KI-Ideen
+    box.appendChild(h("h2",{text:"Ideen mit einer KI entwickeln (optional)"}));
+    var pta = h("textarea",{class:"prompt",readonly:true,rows:"7","aria-label":"Prompt zum Kopieren"});
+    pta.value = promptPlan(R);
+    var pbtn = h("button",{class:"btn small",type:"button",text:"Prompt kopieren"});
+    pbtn.addEventListener("click",function(){ copyText(pta.value, pbtn, pta); });
+    box.appendChild(h("div",{class:"aibox"},[
+      h("ol",{class:"aisteps"},[
+        h("li",{text:"Kopiere den Text unten – dein Visionssatz und deine Ergebnisse sind schon enthalten."}),
+        h("li",{text:"Füge ihn in eine KI deiner Wahl ein."}),
+        h("li",{text:"Übernimm die Ideen, die zu dir passen, in die Felder oben."})
+      ]), pbtn, pta
+    ]));
+
+    doneBtn = h("button",{class:"btn",text:"Abschließen",onclick:function(){
+      B.committed = { sentence:B.final.trim(), date:new Date().toISOString(), training:B.training.trim(), firstStep:B.firstStep.trim(), mentor:B.mentor.trim() };
+      saveB(); window.OB_show("hub");
+    }});
+    check();
+    box.appendChild(h("p",{class:"muted small",style:"margin-top:26px",text:"Mit „Abschließen“ wird dein Visionssatz mit Datum und deinen Notizen auf der Startseite gespeichert. Du kannst ihn jederzeit weiterentwickeln."}));
+    box.appendChild(h("div",{class:"nav"},[
+      h("button",{class:"btn ghost",text:"Zurück",onclick:function(){ B.phase="build"; saveB(); renderSummary(); window.scrollTo(0,0); }}),
+      h("div",{class:"right"},[doneBtn])
+    ]));
+  }
+
+  // ---------- Visionssatz auf der Startseite ----------
+  function renderVisionCard(){
+    var box = el("visioncard"); box.innerHTML = "";
+    var c = B.committed; if (!c || !c.sentence) return;
+    var d = new Date(c.date), ds = "";
+    try{ ds = d.toLocaleDateString("de-DE",{day:"numeric",month:"long",year:"numeric"}); }catch(e){ ds = c.date.slice(0,10); }
+    var notes = [];
+    if (c.training) notes.push(h("div",{class:"vnote"},[h("div",{class:"vlabel",text:"Trainingsfelder"}),h("div",{class:"vtext",text:c.training})]));
+    if (c.firstStep) notes.push(h("div",{class:"vnote"},[h("div",{class:"vlabel",text:"Erster Schritt"}),h("div",{class:"vtext",text:c.firstStep})]));
+    if (c.mentor) notes.push(h("div",{class:"vnote"},[h("div",{class:"vlabel",text:"Begleitung"}),h("div",{class:"vtext",text:c.mentor})]));
+    box.appendChild(h("div",{class:"visioncard"},[
+      h("div",{class:"vhead"},[h("span",{text:"Dein aktueller Visionssatz"}),h("span",{text:"Stand: " + ds})]),
+      h("div",{class:"vsentence",text:"„" + c.sentence + "“"}),
+      notes.length ? h("div",{class:"vnotes"},notes) : null,
+      h("button",{class:"link vedit","data-open":"m-summary",text:"Visionssatz & Notizen bearbeiten"})
+    ]));
+  }
+
+  renderHub();
+})();
+</script>
+</body>
+</html>
