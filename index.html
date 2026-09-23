@@ -1283,8 +1283,8 @@ textarea.prompt.note{font-family:var(--sans);font-size:1rem;background:var(--sur
     var box = el("sum-app"); box.innerHTML = "";
     var st = status();
     var missing = [];
-    if (st.disg!=="done") missing.push(["m-disg","Typ (DISG-Test)"]);
-    if (st.gaben!=="done") missing.push(["m-gaben","Talent (Gabentest)"]);
+    if (st.disg!=="done") missing.push(["m-disg","Typ"]);
+    if (st.gaben!=="done") missing.push(["m-gaben","Talent"]);
     if (st.traum!=="done") missing.push(["m-traum","Traum"]);
     if (missing.length){
       box.appendChild(h("h1",{text:"Gesamtergebnis"}));
