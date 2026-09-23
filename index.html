@@ -239,6 +239,17 @@ textarea.prompt.note{font-family:var(--sans);font-size:1rem;background:var(--sur
 .vlabel{font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;opacity:.8;margin-bottom:2px}
 .vtext{white-space:pre-line;font-size:.95rem}
 .visioncard .vedit{color:var(--green-ink);opacity:.85;margin-top:10px}
+.transfer{margin:40px 0 0;padding-top:8px}
+.transfer h2{margin-top:0}
+.transfer-btns{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 0}
+.xpanel{background:var(--surface);border-radius:14px;padding:18px 20px;margin:16px 0 0}
+.xpanel h3{font-family:var(--serif);font-weight:500;font-size:1.3rem;margin:0 0 8px}
+.xopt{margin-top:16px}
+.xoptt{font-weight:600;font-size:.92rem;margin-bottom:8px}
+.xfile{font:inherit;font-size:.92rem;max-width:100%}
+.xerr{color:#b3261e}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .xerr{color:#f2b8b5} }
+:root[data-theme="dark"] .xerr{color:#f2b8b5}
 /* Hub */
 .hubbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:-8px 0 22px;font-size:.88rem;color:var(--muted)}
 .hubbar .link{padding:4px 0}
@@ -294,8 +305,17 @@ textarea.prompt.note{font-family:var(--sans);font-size:1rem;background:var(--sur
     <div id="visioncard"></div>
     <div class="notice"><span class="notice-icon" aria-hidden="true">▶</span><p><strong>Bevor du startest:</strong> Schau dir bitte zuerst die Anleitungsvideos zum Onboarding an. Du findest sie unter <a href="https://steps.kirchefuerlippstadt.de" target="_blank" rel="noopener">steps.kirchefuerlippstadt.de</a>.</p></div>
     <p>Willkommen zum Onboarding! In drei Schritten entdeckst du, wie Gott dich gemacht hat: deine Persönlichkeit, deine Gaben und deinen Traum. Am Ende fügt sich alles zu deinem persönlichen Visionssatz zusammen.</p>
-    <p class="muted small">Du kannst die Tests in beliebiger Reihenfolge und über mehrere Tage verteilt machen – dein Fortschritt bleibt auf diesem Gerät gespeichert.</p>
+    <p class="muted small">Du kannst die Tests in beliebiger Reihenfolge und über mehrere Tage verteilt machen – dein Fortschritt bleibt auf diesem Gerät gespeichert. Mit „Ergebnisse sichern“ weiter unten kannst du auch auf einem anderen Gerät weitermachen.</p>
     <div class="modlist" id="modlist"></div>
+    <div class="transfer">
+      <h2>Auf einem anderen Gerät weitermachen</h2>
+      <p class="muted small">Deine Antworten werden nur in diesem Browser gespeichert. Sichere sie, wenn du auf einem anderen Gerät weitermachen möchtest – oder bevor du deinen Browserverlauf löschst.</p>
+      <div class="transfer-btns">
+        <button class="btn ghost small" id="x-export" type="button">Ergebnisse sichern</button>
+        <button class="btn ghost small" id="x-import" type="button">Ergebnisse laden</button>
+      </div>
+      <div id="x-panel"></div>
+    </div>
   </section>
 
   <section id="m-disg" class="hidden">
@@ -1544,6 +1564,114 @@ textarea.prompt.note{font-family:var(--sans);font-size:1rem;background:var(--sur
       h("button",{class:"link vedit","data-open":"m-summary",text:"Visionssatz & Notizen bearbeiten"})
     ]));
   }
+
+  // ================= EXPORT / IMPORT =================
+  var KEYS = { disg:"disg-onboarding-v1", gaben:"gabentest-onboarding-v1", traum:"traum-onboarding-v1", summary:"ob-summary-v1" };
+  var PREFIX = "KFL1:";
+  function b64enc(str){ return btoa(unescape(encodeURIComponent(str))); }
+  function b64dec(str){ return decodeURIComponent(escape(atob(str))); }
+  function exportData(){
+    return { app:"kfl-onboarding", v:1, date:new Date().toISOString(), data:{
+      disg: window.OB_DISG.state(), gaben: window.OB_GABEN.state(), traum: window.OB_TRAUM.state(), summary: B } };
+  }
+  function hasProgress(){
+    var st = status();
+    return st.disg!=="new" || st.gaben!=="new" || st.traum!=="new";
+  }
+  function parseImport(text){
+    text = (text||"").trim();
+    if (!text) throw new Error("empty");
+    var obj;
+    if (text.charAt(0)==="{") obj = JSON.parse(text);
+    else {
+      var code = text.replace(/\s+/g,"");
+      if (code.indexOf(PREFIX)===0) code = code.slice(PREFIX.length);
+      obj = JSON.parse(b64dec(code));
+    }
+    if (!obj || obj.app!=="kfl-onboarding" || !obj.data) throw new Error("invalid");
+    return obj;
+  }
+  function applyImport(obj){
+    var d = obj.data;
+    try{
+      if (d.disg) localStorage.setItem(KEYS.disg, JSON.stringify(d.disg));
+      if (d.gaben) localStorage.setItem(KEYS.gaben, JSON.stringify(d.gaben));
+      if (d.traum) localStorage.setItem(KEYS.traum, JSON.stringify(d.traum));
+      if (d.summary) localStorage.setItem(KEYS.summary, JSON.stringify(d.summary));
+    }catch(e){ return false; }
+    location.reload();
+    return true;
+  }
+  function fmtDate(iso){ try{ return new Date(iso).toLocaleDateString("de-DE",{day:"numeric",month:"long",year:"numeric"}); }catch(e){ return ""; } }
+
+  function showExport(){
+    var panel = el("x-panel"); panel.innerHTML = "";
+    if (!hasProgress()){
+      panel.appendChild(h("div",{class:"xpanel"},[h("p",{style:"margin:0",text:"Du hast auf diesem Gerät noch keine Antworten gespeichert. Starte zuerst einen Test – oder lade Ergebnisse von einem anderen Gerät."})]));
+      return;
+    }
+    var json = JSON.stringify(exportData());
+    var code = PREFIX + b64enc(json);
+    var fname = "onboarding-ergebnisse-" + new Date().toISOString().slice(0,10) + ".txt";
+    var dl = h("button",{class:"btn small",type:"button",text:"Als Datei speichern"});
+    var dlNote = h("p",{class:"small muted",style:"margin:8px 0 0"});
+    dl.addEventListener("click",function(){
+      try{
+        var blob = new Blob([code],{type:"text/plain"});
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a"); a.href = url; a.download = fname;
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
+        dlNote.textContent = "Falls kein Download startet, nutze einfach den Code unten.";
+      }catch(e){ dlNote.textContent = "Der Download hat nicht geklappt – nutze bitte den Code unten."; }
+    });
+    var ta = h("textarea",{class:"prompt",readonly:true,rows:"4","aria-label":"Dein Sicherungscode"}); ta.value = code;
+    var cp = h("button",{class:"btn small ghost",type:"button",text:"Code kopieren"});
+    cp.addEventListener("click",function(){
+      function ok(){ cp.textContent = "Kopiert ✓"; setTimeout(function(){ cp.textContent = "Code kopieren"; }, 2200); }
+      function fb(){ try{ ta.focus(); ta.select(); ta.setSelectionRange(0, ta.value.length); if (document.execCommand("copy")) { ok(); return; } }catch(e){} cp.textContent = "Bitte Code markieren und kopieren"; }
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(code).then(ok, fb); else fb();
+    });
+    panel.appendChild(h("div",{class:"xpanel"},[
+      h("h3",{text:"Ergebnisse sichern"}),
+      h("p",{class:"small",text:"Wähle eine der beiden Möglichkeiten und schick dir die Sicherung z. B. per E-Mail oder Messenger. Auf dem neuen Gerät öffnest du diese Seite und tippst auf „Ergebnisse laden“."}),
+      h("div",{class:"xopt"},[h("div",{class:"xoptt",text:"1. Als Datei"}), dl, dlNote]),
+      h("div",{class:"xopt"},[h("div",{class:"xoptt",text:"2. Als Code (funktioniert immer)"}), cp, ta]),
+      h("p",{class:"small muted",style:"margin:12px 0 0",text:"Die Sicherung enthält deine persönlichen Antworten. Teile sie nur mit Menschen, denen du vertraust."})
+    ]));
+  }
+
+  function showImport(){
+    var panel = el("x-panel"); panel.innerHTML = "";
+    var msg = h("p",{class:"small",style:"margin:10px 0 0","aria-live":"polite"});
+    var ta = h("textarea",{class:"prompt",rows:"4",placeholder:"Code hier einfügen (beginnt mit KFL1:) …","aria-label":"Sicherungscode einfügen"});
+    var file = h("input",{type:"file",accept:".txt,.json,text/plain,application/json",class:"xfile","aria-label":"Sicherungsdatei auswählen"});
+    function tryLoad(text){
+      var obj;
+      try{ obj = parseImport(text); }
+      catch(e){ msg.textContent = "Das hat leider nicht geklappt. Prüfe, ob du den vollständigen Code bzw. die richtige Datei verwendest."; msg.className="small xerr"; return; }
+      var when = obj.date ? " vom " + fmtDate(obj.date) : "";
+      if (hasProgress() && !confirm("Sicherung" + when + " laden?\n\nDeine bisherigen Antworten auf diesem Gerät werden dabei ersetzt.")) return;
+      if (!applyImport(obj)){ msg.textContent = "Dein Browser erlaubt das Speichern gerade nicht (z. B. im privaten Modus). Öffne die Seite in einem normalen Browserfenster und versuch es erneut."; msg.className="small xerr"; }
+    }
+    file.addEventListener("change",function(){
+      var f = file.files && file.files[0]; if (!f) return;
+      var r = new FileReader();
+      r.onload = function(){ tryLoad(String(r.result||"")); };
+      r.onerror = function(){ msg.textContent = "Die Datei konnte nicht gelesen werden."; msg.className="small xerr"; };
+      r.readAsText(f);
+    });
+    var go = h("button",{class:"btn small",type:"button",text:"Code laden",onclick:function(){ tryLoad(ta.value); }});
+    panel.appendChild(h("div",{class:"xpanel"},[
+      h("h3",{text:"Ergebnisse laden"}),
+      h("p",{class:"small",text:"Lade deine Sicherung von einem anderen Gerät. Danach kannst du genau dort weitermachen, wo du aufgehört hast."}),
+      h("div",{class:"xopt"},[h("div",{class:"xoptt",text:"1. Datei auswählen"}), file]),
+      h("div",{class:"xopt"},[h("div",{class:"xoptt",text:"2. Oder Code einfügen"}), ta, h("div",{style:"margin-top:10px"},[go])]),
+      msg
+    ]));
+  }
+  el("x-export").addEventListener("click", showExport);
+  el("x-import").addEventListener("click", showImport);
 
   renderHub();
 })();
