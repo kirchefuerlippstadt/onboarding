@@ -54,8 +54,8 @@ button{font:inherit;cursor:pointer}
 
 /* Intro */
 .title-big{font-family:var(--serif);font-weight:700;font-size:clamp(3.2rem,14vw,6.2rem);line-height:.95;letter-spacing:.01em;margin:0 0 22px}
-.meta{display:flex;gap:28px;margin:0 0 20px;flex-wrap:wrap}
-.meta div{font-size:.9rem;color:var(--muted)}
+.meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:0 0 22px;max-width:460px}
+.meta div{font-size:.9rem;color:var(--muted);hyphens:manual;overflow-wrap:break-word}
 .meta strong{display:block;font-family:var(--serif);font-size:1.8rem;color:var(--ink);font-weight:700;line-height:1.1}
 
 /* Quiz */
@@ -271,6 +271,10 @@ textarea.prompt.note{font-family:var(--sans);font-size:1rem;background:var(--sur
 .pdf-hint{font-size:.9rem;color:var(--muted);margin:10px 0 0}
 .pdf-hint a{color:inherit}
 @media (max-width:420px){ .yt-note{display:none} .yt-play{width:54px;height:54px} }
+.hubright{display:flex;gap:14px;align-items:center}
+#m-disg:has(#d-intro:not(.hidden)) .hubright [data-open],
+#m-gaben:has(#g-intro:not(.hidden)) .hubright [data-open],
+#m-traum:has(#t-app > .title-big) .hubright [data-open]{display:none}
 /* Hub */
 .hubbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:-8px 0 22px;font-size:.88rem;color:var(--muted)}
 .hubbar .link{padding:4px 0}
@@ -330,7 +334,7 @@ textarea.prompt.note{font-family:var(--sans);font-size:1rem;background:var(--sur
     <div id="visioncard"></div>
     <p class="steps-hint">Das Onboarding ist Teil der KFL-STEPS – mehr dazu auf <a href="https://steps.kirchefuerlippstadt.de" target="_blank" rel="noopener">steps.kirchefuerlippstadt.de</a>.</p>
     <p>Willkommen zum Onboarding! In drei Schritten entdeckst du, wie Gott dich gemacht hat: deine Persönlichkeit, deine Gaben und deinen Traum. Am Ende fügt sich alles zu deinem persönlichen Visionssatz zusammen.</p>
-    <p class="muted small">Du kannst die Tests in beliebiger Reihenfolge und über mehrere Tage verteilt machen – dein Fortschritt bleibt auf diesem Gerät gespeichert. Mit „Ergebnisse sichern“ weiter unten kannst du auch auf einem anderen Gerät weitermachen.</p>
+    <p class="muted small">Dein Fortschritt bleibt auf diesem Gerät gespeichert. Mit „Ergebnisse sichern“ weiter unten kannst du auch auf einem anderen Gerät weitermachen.</p>
     <div class="modlist" id="modlist"></div>
     <div class="transfer">
       <h2>Auf einem anderen Gerät weitermachen</h2>
@@ -344,13 +348,14 @@ textarea.prompt.note{font-family:var(--sans);font-size:1rem;background:var(--sur
   </section>
 
   <section id="m-disg" class="hidden">
-    <div class="hubbar"><button class="link" data-hub>← Übersicht</button><span>Modul 1 · Typ</span></div>
+    <div class="hubbar"><button class="link" data-hub>← Übersicht</button><span class="hubright"><span>Modul 1 · Typ</span><button class="link" data-open="m-disg">▶ Video</button></span></div>
 
 
   <!-- INTRO -->
   <section id="d-intro">
     <div class="title-big">Typ</div>
     <div class="modvideo"><div class="video" data-yt="2FPNM1mSu_M" data-title="Onboarding-Video: Typ"><button type="button" class="yt-load" aria-label="Onboarding-Video „Typ“ abspielen"><span class="yt-play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></svg></span><span class="yt-title">Onboarding-Video: Typ</span><span class="yt-note">Zum Abspielen wird das Video von YouTube geladen. Dabei werden Daten an YouTube (Google) übertragen.</span></button></div><p class="pdf-hint">Du arbeitest lieber mit Papier? <a href="https://drive.google.com/file/d/15IKX2nMsdS0BLaTZEj-d6lAHQKgdfq78/view?usp=sharing" target="_blank" rel="noopener">Hier findest du die PDF-Unterlagen zum Modul „Typ“</a>.</p></div>
+    <div class="meta"><div><strong>10</strong>Wortgruppen</div><div><strong>ca. 5</strong>Min. Test</div><div><strong>4</strong>Typen</div></div>
     <p>Dieser kurze Test zeigt dir, wie du typischerweise denkst, handelst und mit anderen umgehst. Es gibt kein Richtig oder Falsch – jeder Typ bringt wertvolle Stärken mit.</p>
     <div class="how">
       <strong>So funktioniert’s</strong>
@@ -401,17 +406,13 @@ textarea.prompt.note{font-family:var(--sans);font-size:1rem;background:var(--sur
   </section>
 
   <section id="m-gaben" class="hidden">
-    <div class="hubbar"><button class="link" data-hub>← Übersicht</button><span>Modul 2 · Talent</span></div>
+    <div class="hubbar"><button class="link" data-hub>← Übersicht</button><span class="hubright"><span>Modul 2 · Talent</span><button class="link" data-open="m-gaben">▶ Video</button></span></div>
 
 
   <section id="g-intro">
     <div class="title-big">Talent</div>
     <div class="modvideo"><div class="video" data-yt="xszBnYyZPok" data-title="Onboarding-Video: Talent"><button type="button" class="yt-load" aria-label="Onboarding-Video „Talent“ abspielen"><span class="yt-play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></svg></span><span class="yt-title">Onboarding-Video: Talent</span><span class="yt-note">Zum Abspielen wird das Video von YouTube geladen. Dabei werden Daten an YouTube (Google) übertragen.</span></button></div><p class="pdf-hint">Du arbeitest lieber mit Papier? <a href="https://drive.google.com/file/d/12ifLwWbNdvEGjf7wge6Xln3DaSKCowyi/view?usp=sharing" target="_blank" rel="noopener">Hier findest du die PDF-Unterlagen zum Modul „Talent“</a>.</p></div>
-    <div class="meta">
-      <div><strong>141</strong>Aussagen</div>
-      <div><strong>ca. 20</strong>Minuten</div>
-      <div><strong>23</strong>mögliche Gaben</div>
-    </div>
+    <div class="meta"><div><strong>141</strong>Aussagen</div><div><strong>ca. 20</strong>Min. Test</div><div><strong>23</strong>Gaben</div></div>
     <p>Gott hat jedem Menschen Gaben geschenkt, mit denen er Gemeinde und Welt bereichern kann. Dieser Test hilft dir, deine stärksten Gaben zu entdecken.</p>
     <div class="how">
       <strong>So funktioniert’s</strong>
@@ -465,7 +466,7 @@ textarea.prompt.note{font-family:var(--sans);font-size:1rem;background:var(--sur
   </section>
 
   <section id="m-traum" class="hidden">
-    <div class="hubbar"><button class="link" data-hub>← Übersicht</button><span>Modul 3 · Traum</span></div>
+    <div class="hubbar"><button class="link" data-hub>← Übersicht</button><span class="hubright"><span>Modul 3 · Traum</span><button class="link" data-open="m-traum">▶ Video</button></span></div>
 <div id="t-app"></div>
   </section>
 
@@ -638,7 +639,20 @@ textarea.prompt.note{font-family:var(--sans);font-size:1rem;background:var(--sur
     show("quiz"); renderRow();
   }
 
-  $("startBtn").addEventListener("click", function(){ start(true); });
+  function dHas(){ return state.answers && state.answers.some(function(a){ return a && a.length; }); }
+  function dDone(){ return state.answers && state.answers.length===ROWS.length && state.answers.every(function(a){ return a && a.length===4; }); }
+  function introButtons(has, done){
+    var st = $("startBtn"), rs = $("resumeBtn");
+    if (has){
+      rs.className = "btn"; rs.textContent = done ? "Mein Ergebnis ansehen" : "Weitermachen, wo ich aufgehört habe"; rs.style.order = "0";
+      st.className = "link"; st.textContent = "Test neu beginnen"; st.style.order = "1";
+    } else {
+      st.className = "btn"; st.textContent = "Test starten"; st.style.order = "0";
+      rs.className = "link hidden";
+    }
+  }
+
+  $("startBtn").addEventListener("click", function(){ if (dHas() && !confirm("Möchtest du dieses Modul wirklich neu beginnen?\n\nDeine bisherigen Antworten in diesem Modul werden dabei gelöscht.")) return; start(true); });
   $("resumeBtn").addEventListener("click", function(){
     if(state.answers.filter(Boolean).length===ROWS.length && state.answers.every(function(a){return a&&a.length===4;})) renderResult();
     else start(false);
@@ -653,11 +667,12 @@ textarea.prompt.note{font-family:var(--sans);font-size:1rem;background:var(--sur
     if(state.cur===0) show("intro"); else { state.cur--; save(); renderRow(); }
   });
   $("reviewBtn").addEventListener("click", function(){ state.cur=0; show("quiz"); renderRow(); });
-  $("restartBtn").addEventListener("click", function(){ clear(); start(true); });
+  $("restartBtn").addEventListener("click", function(){ if (!confirm("Möchtest du dieses Modul wirklich neu beginnen?\n\nDeine bisherigen Antworten in diesem Modul werden dabei gelöscht.")) return; clear(); start(true); });
 
-  window.OB_DISG = { state:function(){ return state; }, rows:ROWS };
+  window.OB_DISG = { state:function(){ return state; }, rows:ROWS, intro:function(){ introButtons(dHas(), dDone()); show("intro"); } };
   var saved = load();
-  if(saved && saved.answers.some(function(a){return a && a.length;})){ state=saved; $("resumeBtn").classList.remove("hidden"); }
+  if(saved && saved.answers.some(function(a){return a && a.length;})){ state=saved; }
+  introButtons(dHas(), dDone());
 })();
 </script>
 <script>
@@ -809,16 +824,29 @@ textarea.prompt.note{font-family:var(--sans);font-size:1rem;background:var(--sur
     if (fresh){ state = { a: new Array(141).fill(null), page: 0 }; save(); }
     show("quiz"); renderPage();
   }
-  $("startBtn").addEventListener("click", function(){ start(true); });
+
+  function introButtons(has, done){
+    var st = $("startBtn"), rs = $("resumeBtn");
+    if (has){
+      rs.className = "btn"; rs.textContent = done ? "Mein Ergebnis ansehen" : "Weitermachen, wo ich aufgehört habe"; rs.style.order = "0";
+      st.className = "link"; st.textContent = "Test neu beginnen"; st.style.order = "1";
+    } else {
+      st.className = "btn"; st.textContent = "Test starten"; st.style.order = "0";
+      rs.className = "link hidden";
+    }
+  }
+
+  $("startBtn").addEventListener("click", function(){ if (answered()>0 && !confirm("Möchtest du dieses Modul wirklich neu beginnen?\n\nDeine bisherigen Antworten in diesem Modul werden dabei gelöscht.")) return; start(true); });
   $("resumeBtn").addEventListener("click", function(){ if (answered()===141) renderResult(); else start(false); });
   $("reviewBtn").addEventListener("click", function(){ state.page = 0; save(); show("quiz"); renderPage(); });
-  $("restartBtn").addEventListener("click", function(){ clear(); start(true); });
+  $("restartBtn").addEventListener("click", function(){ if (!confirm("Möchtest du dieses Modul wirklich neu beginnen?\n\nDeine bisherigen Antworten in diesem Modul werden dabei gelöscht.")) return; clear(); start(true); });
 
-  window.OB_GABEN = { state:function(){ return state; }, scores:scores, gifts:GIFTS };
+  window.OB_GABEN = { state:function(){ return state; }, scores:scores, gifts:GIFTS, intro:function(){ introButtons(answered()>0, answered()===141); show("intro"); } };
   var saved = load();
   if (saved && saved.a.length===141 && saved.a.some(function(v){ return v!==null; })){
-    state = saved; $("resumeBtn").classList.remove("hidden");
+    state = saved; 
   }
+  introButtons(answered()>0, answered()===141);
 })();
 </script>
 <script>
@@ -883,7 +911,7 @@ textarea.prompt.note{font-family:var(--sans);font-size:1rem;background:var(--sur
     (kids||[]).forEach(function(c){ if(c) el.appendChild(typeof c==="string" ? document.createTextNode(c) : c); });
     return el;
   }
-  function go(n){ S.step = n; save(); render(); window.scrollTo(0,0); }
+  function go(n){ S.step = n; if (n>0) S.lastStep = n; save(); render(); window.scrollTo(0,0); }
   function filled(arr){ return arr.every(function(x){ return x.trim(); }); }
 
   var STEPS = ["Start","Traum-Themen","Top 3 Themen","Traum-Personen","Top 3 Personen","Muster erkennen","Visionssatz","Zusammenfassung"];
@@ -903,10 +931,12 @@ textarea.prompt.note{font-family:var(--sans);font-size:1rem;background:var(--sur
 
   // ---------- Schritt 0: Intro ----------
   function viewIntro(){
-    var hasProgress = S.tSel.length || S.tTop.some(Boolean);
+    var hasProgress = S.tSel.length || S.tTop.some(Boolean) || (S.lastStep||0)>0;
+    var tDoneNow = (S.lastStep||0)>=7 && (S.favText||"").trim();
     return [
       h("div",{class:"title-big",text:"Traum"}),
       h("div",{html:"<div class=\"modvideo\"><div class=\"video\" data-yt=\"IgwHaFS-eRY\" data-title=\"Onboarding-Video: Traum\"><button type=\"button\" class=\"yt-load\" aria-label=\"Onboarding-Video „Traum“ abspielen\"><span class=\"yt-play\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M8 5.5v13l10.5-6.5z\" fill=\"currentColor\"/></svg></span><span class=\"yt-title\">Onboarding-Video: Traum</span><span class=\"yt-note\">Zum Abspielen wird das Video von YouTube geladen. Dabei werden Daten an YouTube (Google) übertragen.</span></button></div><p class=\"pdf-hint\">Du arbeitest lieber mit Papier? <a href=\"https://drive.google.com/file/d/1FGrc6hOWm7fFmQkxXyihF3XPM18Tbwqa/view?usp=sharing\" target=\"_blank\" rel=\"noopener\">Hier findest du die PDF-Unterlagen zum Modul „Traum“</a>.</p></div>"}),
+      h("div",{html:"<div class=\"meta\"><div><strong>118</strong>Vorschläge</div><div><strong>ca. 20</strong>Min. Test</div><div><strong>mind. 4</strong>Kombi&shy;nationen</div></div>"}),
       h("p",{text:"Gott hat dir eine Leidenschaft ins Herz gelegt – Themen, die dich begeistern, und Menschen, für die dein Herz schlägt. In diesem Test spürst du deinem Traum nach und formulierst am Ende einen ersten Visionssatz."}),
       h("div",{class:"card"},[
         h("h3",{text:"So funktioniert’s"}),
@@ -918,8 +948,8 @@ textarea.prompt.note{font-family:var(--sans);font-size:1rem;background:var(--sur
       ]),
       h("p",{class:"muted small",text:"Dein Fortschritt wird auf diesem Gerät gespeichert."}),
       h("div",{class:"nav"},[
-        h("button",{class:"btn",onclick:function(){ go(1); },text: hasProgress ? "Weitermachen" : "Los geht’s"}),
-        hasProgress ? h("button",{class:"link",onclick:function(){ S = fresh(); save(); go(1); },text:"Von vorn beginnen"}) : null
+        h("button",{class:"btn",onclick:function(){ go(hasProgress ? (S.lastStep||1) : 1); },text: tDoneNow ? "Mein Ergebnis ansehen" : hasProgress ? "Weitermachen, wo ich aufgehört habe" : "Los geht’s"}),
+        hasProgress ? h("button",{class:"link",onclick:function(){ if (!confirm("Möchtest du dieses Modul wirklich neu beginnen?\n\nDeine bisherigen Antworten in diesem Modul werden dabei gelöscht.")) return; S = fresh(); save(); go(1); },text:"Test neu beginnen"}) : null
       ])
     ];
   }
@@ -1133,7 +1163,7 @@ textarea.prompt.note{font-family:var(--sans);font-size:1rem;background:var(--sur
       h("p",{class:"muted small",text:"Tipp: Mach einen Screenshot von dieser Seite oder schreib dir deinen Satz auf. Deine Eingaben bleiben auf diesem Gerät gespeichert."}),
       h("div",{class:"nav"},[
         h("button",{class:"btn ghost",onclick:function(){ go(6); },text:"Satz bearbeiten"}),
-        h("div",{class:"right"},[h("button",{class:"btn ghost",onclick:function(){ S = fresh(); save(); go(0); },text:"Neu starten"}),h("button",{class:"btn","data-hub":"1",text:"Weiter zur Übersicht"})])
+        h("div",{class:"right"},[h("button",{class:"btn ghost",onclick:function(){ if (!confirm("Möchtest du dieses Modul wirklich neu beginnen?\n\nDeine bisherigen Antworten in diesem Modul werden dabei gelöscht.")) return; S = fresh(); save(); go(0); },text:"Neu starten"}),h("button",{class:"btn","data-hub":"1",text:"Weiter zur Übersicht"})])
       ])
     ]);
   }
@@ -1145,7 +1175,7 @@ textarea.prompt.note{font-family:var(--sans);font-size:1rem;background:var(--sur
     var v = [viewIntro, function(){return viewSelect("t");}, function(){return viewTop("t");}, function(){return viewSelect("p");}, function(){return viewTop("p");}, viewMuster, viewVision, viewSummary][S.step]();
     v.forEach(function(n){ if(n) app.appendChild(n); });
   }
-  window.OB_TRAUM = { state:function(){ return S; } };
+  window.OB_TRAUM = { state:function(){ return S; }, intro:function(){ if (!S.lastStep && S.step>0) S.lastStep = S.step; S.step = 0; save(); render(); } };
   render();
 })();
 </script>
@@ -1161,7 +1191,7 @@ textarea.prompt.note{font-family:var(--sans);font-size:1rem;background:var(--sur
     var dStarted = ds.answers && ds.answers.some(function(a){ return a && a.length; });
     var gCount = (gs.a||[]).filter(function(v){ return v!==null && v!==undefined; }).length;
     var tDone = !!((ts.favText||"").trim() && ts.pick && ts.pick.pU && ts.pick.pZ && ts.pick.tU && ts.pick.tZ);
-    var tStarted = ts.step>0 || (ts.tSel||[]).length>0;
+    var tStarted = ts.step>0 || (ts.lastStep||0)>0 || (ts.tSel||[]).length>0;
     return {
       disg: dDone ? "done" : dStarted ? "progress" : "new",
       gaben: gCount===141 ? "done" : gCount>0 ? "progress" : "new",
@@ -1175,6 +1205,9 @@ textarea.prompt.note{font-family:var(--sans);font-size:1rem;background:var(--sur
     SCREENS.forEach(function(s){ el(s).classList.toggle("hidden", s!==name); });
     if (name==="hub") renderHub();
     if (name==="m-summary") renderSummary();
+    if (name==="m-disg") window.OB_DISG.intro();
+    if (name==="m-gaben") window.OB_GABEN.intro();
+    if (name==="m-traum") window.OB_TRAUM.intro();
     window.scrollTo(0,0);
   };
   document.addEventListener("click", function(e){
@@ -1185,9 +1218,9 @@ textarea.prompt.note{font-family:var(--sans);font-size:1rem;background:var(--sur
   function renderHub(){
     var st = status();
     var mods = [
-      ["m-disg","1","Typ","Wie tickst du? Ein kurzer Test zu deiner Persönlichkeit.","ca. 5 Min.",st.disg],
-      ["m-gaben","2","Talent","Welche Gaben hat Gott dir geschenkt? 141 Aussagen zu 23 Gaben.","ca. 20 Min.",st.gaben],
-      ["m-traum","3","Traum","Für welche Themen und Menschen schlägt dein Herz?","ca. 20 Min.",st.traum]
+      ["m-disg","1","Typ","Wie tickst du? Ein kurzer Test zu deiner Persönlichkeit.","Video 34 Min. · Test ca. 5 Min.",st.disg],
+      ["m-gaben","2","Talent","Welche Gaben hat Gott dir geschenkt? 141 Aussagen zu 23 Gaben.","Video 18 Min. · Test ca. 20 Min.",st.gaben],
+      ["m-traum","3","Traum","Für welche Themen und Menschen schlägt dein Herz?","Video 27 Min. · Test ca. 20 Min.",st.traum]
     ];
     var all = st.disg==="done" && st.gaben==="done" && st.traum==="done";
     var html = mods.map(function(m){
