@@ -256,6 +256,21 @@ textarea.prompt.note{font-family:var(--sans);font-size:1rem;background:var(--sur
 .xoptt{font-weight:600;font-size:.92rem;margin-bottom:8px}
 .xfile{font:inherit;font-size:.92rem;max-width:100%}
 .xerr{color:var(--gold);font-weight:500}
+.steps-hint{font-size:.88rem;color:var(--muted);margin:-8px 0 22px}
+.steps-hint a{color:inherit}
+.modvideo{margin:0 0 26px}
+.video{position:relative;aspect-ratio:16/9;width:100%;border-radius:14px;overflow:hidden;background:var(--green);color:var(--green-ink)}
+.video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.yt-load{position:absolute;inset:0;width:100%;height:100%;border:0;background:transparent;color:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:18px;text-align:center;cursor:pointer;font:inherit}
+.yt-load:focus-visible{outline:3px solid var(--gold);outline-offset:-6px}
+.yt-play{width:64px;height:64px;border-radius:50%;background:var(--green-ink);color:var(--green);display:grid;place-items:center;transition:transform .15s}
+.yt-play svg{width:28px;height:28px;margin-left:3px}
+.yt-load:hover .yt-play{transform:scale(1.06)}
+.yt-title{font-family:var(--serif);font-size:1.25rem;line-height:1.2}
+.yt-note{font-size:.75rem;opacity:.75;max-width:34ch;line-height:1.4}
+.pdf-hint{font-size:.9rem;color:var(--muted);margin:10px 0 0}
+.pdf-hint a{color:inherit}
+@media (max-width:420px){ .yt-note{display:none} .yt-play{width:54px;height:54px} }
 /* Hub */
 .hubbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:-8px 0 22px;font-size:.88rem;color:var(--muted)}
 .hubbar .link{padding:4px 0}
@@ -313,7 +328,7 @@ textarea.prompt.note{font-family:var(--sans);font-size:1rem;background:var(--sur
     </button></div>
     <div class="title-big">Deine Berufung</div>
     <div id="visioncard"></div>
-    <div class="notice"><span class="notice-icon" aria-hidden="true">▶</span><p><strong>Bevor du startest:</strong> Schau dir bitte zuerst die Anleitungsvideos zum Onboarding an. Du findest sie unter <a href="https://steps.kirchefuerlippstadt.de" target="_blank" rel="noopener">steps.kirchefuerlippstadt.de</a>.</p></div>
+    <p class="steps-hint">Das Onboarding ist Teil der KFL-STEPS – mehr dazu auf <a href="https://steps.kirchefuerlippstadt.de" target="_blank" rel="noopener">steps.kirchefuerlippstadt.de</a>.</p>
     <p>Willkommen zum Onboarding! In drei Schritten entdeckst du, wie Gott dich gemacht hat: deine Persönlichkeit, deine Gaben und deinen Traum. Am Ende fügt sich alles zu deinem persönlichen Visionssatz zusammen.</p>
     <p class="muted small">Du kannst die Tests in beliebiger Reihenfolge und über mehrere Tage verteilt machen – dein Fortschritt bleibt auf diesem Gerät gespeichert. Mit „Ergebnisse sichern“ weiter unten kannst du auch auf einem anderen Gerät weitermachen.</p>
     <div class="modlist" id="modlist"></div>
@@ -334,8 +349,8 @@ textarea.prompt.note{font-family:var(--sans);font-size:1rem;background:var(--sur
 
   <!-- INTRO -->
   <section id="d-intro">
-    <h1>Onboarding – Typ</h1>
-    <div class="notice"><span class="notice-icon" aria-hidden="true">▶</span><p><strong>Video noch nicht gesehen?</strong> Schau dir vor dem Test das Onboarding-Video zum Modul „Typ“ an: <a href="https://kfl.my.canva.site/onboarding-1-4" target="_blank" rel="noopener">Video „Typ“ ansehen</a></p></div>
+    <div class="title-big">Typ</div>
+    <div class="modvideo"><div class="video" data-yt="2FPNM1mSu_M" data-title="Onboarding-Video: Typ"><button type="button" class="yt-load" aria-label="Onboarding-Video „Typ“ abspielen"><span class="yt-play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></svg></span><span class="yt-title">Onboarding-Video: Typ</span><span class="yt-note">Zum Abspielen wird das Video von YouTube geladen. Dabei werden Daten an YouTube (Google) übertragen.</span></button></div><p class="pdf-hint">Du arbeitest lieber mit Papier? <a href="https://drive.google.com/file/d/15IKX2nMsdS0BLaTZEj-d6lAHQKgdfq78/view?usp=sharing" target="_blank" rel="noopener">Hier findest du die PDF-Unterlagen zum Modul „Typ“</a>.</p></div>
     <p>Dieser kurze Test zeigt dir, wie du typischerweise denkst, handelst und mit anderen umgehst. Es gibt kein Richtig oder Falsch – jeder Typ bringt wertvolle Stärken mit.</p>
     <div class="how">
       <strong>So funktioniert’s</strong>
@@ -390,8 +405,8 @@ textarea.prompt.note{font-family:var(--sans);font-size:1rem;background:var(--sur
 
 
   <section id="g-intro">
-    <div class="title-big">Gaben&shy;test</div>
-    <div class="notice"><span class="notice-icon" aria-hidden="true">▶</span><p><strong>Video noch nicht gesehen?</strong> Schau dir vor dem Test das Onboarding-Video zum Modul „Talent“ an: <a href="https://kfl.my.canva.site/onboarding-2-4" target="_blank" rel="noopener">Video „Talent“ ansehen</a></p></div>
+    <div class="title-big">Talent</div>
+    <div class="modvideo"><div class="video" data-yt="xszBnYyZPok" data-title="Onboarding-Video: Talent"><button type="button" class="yt-load" aria-label="Onboarding-Video „Talent“ abspielen"><span class="yt-play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></svg></span><span class="yt-title">Onboarding-Video: Talent</span><span class="yt-note">Zum Abspielen wird das Video von YouTube geladen. Dabei werden Daten an YouTube (Google) übertragen.</span></button></div><p class="pdf-hint">Du arbeitest lieber mit Papier? <a href="https://drive.google.com/file/d/12ifLwWbNdvEGjf7wge6Xln3DaSKCowyi/view?usp=sharing" target="_blank" rel="noopener">Hier findest du die PDF-Unterlagen zum Modul „Talent“</a>.</p></div>
     <div class="meta">
       <div><strong>141</strong>Aussagen</div>
       <div><strong>ca. 20</strong>Minuten</div>
@@ -891,7 +906,7 @@ textarea.prompt.note{font-family:var(--sans);font-size:1rem;background:var(--sur
     var hasProgress = S.tSel.length || S.tTop.some(Boolean);
     return [
       h("div",{class:"title-big",text:"Traum"}),
-      h("div",{html:"<div class=\"notice\"><span class=\"notice-icon\" aria-hidden=\"true\">▶</span><p><strong>Video noch nicht gesehen?</strong> Schau dir vor dem Test das Onboarding-Video zum Modul „Traum“ an: <a href=\"https://kfl.my.canva.site/onboarding-3-4\" target=\"_blank\" rel=\"noopener\">Video „Traum“ ansehen</a></p></div>"}),
+      h("div",{html:"<div class=\"modvideo\"><div class=\"video\" data-yt=\"IgwHaFS-eRY\" data-title=\"Onboarding-Video: Traum\"><button type=\"button\" class=\"yt-load\" aria-label=\"Onboarding-Video „Traum“ abspielen\"><span class=\"yt-play\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M8 5.5v13l10.5-6.5z\" fill=\"currentColor\"/></svg></span><span class=\"yt-title\">Onboarding-Video: Traum</span><span class=\"yt-note\">Zum Abspielen wird das Video von YouTube geladen. Dabei werden Daten an YouTube (Google) übertragen.</span></button></div><p class=\"pdf-hint\">Du arbeitest lieber mit Papier? <a href=\"https://drive.google.com/file/d/1FGrc6hOWm7fFmQkxXyihF3XPM18Tbwqa/view?usp=sharing\" target=\"_blank\" rel=\"noopener\">Hier findest du die PDF-Unterlagen zum Modul „Traum“</a>.</p></div>"}),
       h("p",{text:"Gott hat dir eine Leidenschaft ins Herz gelegt – Themen, die dich begeistern, und Menschen, für die dein Herz schlägt. In diesem Test spürst du deinem Traum nach und formulierst am Ende einen ersten Visionssatz."}),
       h("div",{class:"card"},[
         h("h3",{text:"So funktioniert’s"}),
@@ -1748,6 +1763,19 @@ textarea.prompt.note{font-family:var(--sans);font-size:1rem;background:var(--sur
     if (mq && mq.addEventListener) mq.addEventListener("change", sync);
     sync();
   })();
+
+  // ================= VIDEOS (2-Klick-Lösung) =================
+  document.addEventListener("click", function(e){
+    var b = e.target.closest(".yt-load"); if (!b) return;
+    var box = b.parentNode, id = box.getAttribute("data-yt");
+    var f = document.createElement("iframe");
+    f.src = "https://www.youtube-nocookie.com/embed/" + id + "?autoplay=1&rel=0";
+    f.title = box.getAttribute("data-title") || "YouTube-Video";
+    f.setAttribute("allow","accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share");
+    f.setAttribute("referrerpolicy","strict-origin-when-cross-origin");
+    f.setAttribute("allowfullscreen","");
+    box.innerHTML = ""; box.appendChild(f);
+  });
 
   renderHub();
 })();
