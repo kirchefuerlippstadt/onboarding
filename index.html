@@ -6,13 +6,14 @@
 <title>Onboarding – Deine Berufung</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Lora:wght@400;500&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#f2f2f2; --surface:#ffffff; --ink:#2e2e2e; --muted:#6b6b6b;
-  --green:#465a47; --green-ink:#ffffff; --gold:#b49c78; --gold-soft:rgba(180,156,120,.18);
-  --line:#2e2e2e; --line-soft:#d6d6d6;
+  --bg:#f9f7f6; --surface:rgba(63,79,68,.07); --ink:#171717; --muted:#3f4f44;
+  --green:#2c3930; --green-ink:#f9f7f6; --gold:#8d5637; --tan:#ba8b68; --gold-soft:rgba(186,139,104,.20);
+  --line:#171717; --line-soft:rgba(63,79,68,.25); --on-green-line:rgba(249,247,246,.25);
   --serif:"Playfair Display", "Didot", "Bodoni 72", Georgia, serif;
+  --read:"Lora", Georgia, "Times New Roman", serif;
   --sans:"Poppins", "Segoe UI", system-ui, -apple-system, sans-serif;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
@@ -20,15 +21,15 @@
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#1c1f1c; --surface:#262a26; --ink:#ececec; --muted:#a9a9a9;
-    --green:#6f8a70; --green-ink:#10140f; --gold:#c9b28d; --gold-soft:rgba(201,178,141,.2);
-    --line:#ececec; --line-soft:#444a44;
+    --bg:#171717; --surface:#2c3930; --ink:#f9f7f6; --muted:rgba(249,247,246,.68);
+    --green:#ba8b68; --green-ink:#171717; --gold:#ba8b68; --tan:#8d5637; --gold-soft:rgba(186,139,104,.16);
+    --line:#f9f7f6; --line-soft:rgba(249,247,246,.16); --on-green-line:rgba(23,23,23,.22);
   }
 }
 :root[data-theme="dark"]{
-  --bg:#1c1f1c; --surface:#262a26; --ink:#ececec; --muted:#a9a9a9;
-  --green:#6f8a70; --green-ink:#10140f; --gold:#c9b28d; --gold-soft:rgba(201,178,141,.2);
-  --line:#ececec; --line-soft:#444a44;
+  --bg:#171717; --surface:#2c3930; --ink:#f9f7f6; --muted:rgba(249,247,246,.68);
+    --green:#ba8b68; --green-ink:#171717; --gold:#ba8b68; --tan:#8d5637; --gold-soft:rgba(186,139,104,.16);
+    --line:#f9f7f6; --line-soft:rgba(249,247,246,.16); --on-green-line:rgba(23,23,23,.22);
 }
 *,*::before,*::after{box-sizing:inherit}
 html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 20px)}
@@ -92,7 +93,7 @@ button{font:inherit;cursor:pointer}
 .row.top .l{color:var(--green)}
 .row .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .row .b{height:8px;background:var(--line-soft);border-radius:99px;overflow:hidden}
-.row .b i{display:block;height:100%;background:var(--gold)}
+.row .b i{display:block;height:100%;background:var(--tan)}
 .row.top .b i{background:var(--green)}
 .row .v{text-align:right;font-weight:600}
 .sub{font-size:.85rem;color:var(--muted);margin:14px 0 4px}
@@ -129,7 +130,7 @@ button{font:inherit;cursor:pointer}
 .score .v{font-size:1.4rem;font-weight:700}
 .score .n{font-size:.9rem;color:var(--muted);margin-top:2px}
 .bar{height:6px;background:var(--line-soft);border-radius:99px;margin-top:10px;overflow:hidden}
-.bar i{display:block;height:100%;background:var(--gold)}
+.bar i{display:block;height:100%;background:var(--tan)}
 .score.lead .bar i{background:var(--green)}
 .types{display:grid;gap:14px;margin-bottom:30px}
 .type{border-left:4px solid var(--line-soft);padding:4px 0 4px 16px}
@@ -184,9 +185,9 @@ button{font:inherit;cursor:pointer}
 /* Vision */
 .combo{margin:26px 0}
 .combo .tag{font-size:.85rem;color:var(--muted);margin-bottom:8px}
-.sentence{font-family:var(--serif);font-size:1.15rem;line-height:1.45}
+.sentence{font-family:var(--read);font-weight:500;font-size:1.1rem;line-height:1.55}
 .favorite{background:var(--green);color:var(--green-ink);border-radius:16px;padding:26px 24px;margin:18px 0}
-.favorite .sentence{font-size:clamp(1.35rem,4.5vw,1.8rem);font-style:italic}
+.favorite .sentence{font-size:clamp(1.2rem,4vw,1.5rem);line-height:1.5}
 .favorite .small{opacity:.85;margin-top:10px}
 .sheet{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:.95rem}
 .sheet dt{color:var(--muted)}
@@ -195,7 +196,7 @@ button{font:inherit;cursor:pointer}
 .aisteps{margin:0 0 14px;padding-left:1.2em;font-size:.95rem}
 .aisteps li{margin-bottom:4px}
 textarea.prompt{display:block;width:100%;margin-top:12px;font:inherit;font-size:.85rem;line-height:1.5;padding:12px 14px;border-radius:10px;border:1.5px solid var(--line-soft);background:var(--bg);color:var(--ink);resize:vertical}
-textarea.prompt.own{font-family:var(--serif);font-size:1.15rem;background:var(--surface)}
+textarea.prompt.own{font-family:var(--read);font-size:1.1rem;line-height:1.55;background:var(--surface)}
 textarea.prompt:focus{outline:none;border-color:var(--green)}
 
 .small{font-size:.9rem}
@@ -209,7 +210,7 @@ input[type=text]:focus{outline:none;border-color:var(--green)}
 .aisteps{margin:0 0 14px;padding-left:1.2em;font-size:.95rem}
 .aisteps li{margin-bottom:4px}
 textarea.prompt{display:block;width:100%;margin-top:12px;font:inherit;font-size:.85rem;line-height:1.5;padding:12px 14px;border-radius:10px;border:1.5px solid var(--line-soft);background:var(--bg);color:var(--ink);resize:vertical}
-textarea.prompt.own{font-family:var(--serif);font-size:1.15rem;background:var(--surface)}
+textarea.prompt.own{font-family:var(--read);font-size:1.1rem;line-height:1.55;background:var(--surface)}
 textarea.prompt:focus{outline:none;border-color:var(--green)}
 
 /* Hinweis & Footer */
@@ -234,8 +235,8 @@ textarea.prompt.note{font-family:var(--sans);font-size:1rem;background:var(--sur
 .bblock .chips{margin:10px 0 4px}
 .visioncard{background:var(--green);color:var(--green-ink);border-radius:18px;padding:24px 24px 18px;margin:0 0 24px}
 .vhead{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:.82rem;font-weight:600;letter-spacing:.03em;opacity:.85;margin-bottom:12px}
-.vsentence{font-family:var(--serif);font-style:italic;font-size:clamp(1.25rem,4.2vw,1.6rem);line-height:1.4}
-.vnotes{display:grid;gap:12px;margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.25)}
+.vsentence{font-family:var(--read);font-weight:500;font-size:clamp(1.15rem,3.8vw,1.4rem);line-height:1.55}
+.vnotes{display:grid;gap:12px;margin-top:18px;padding-top:16px;border-top:1px solid var(--on-green-line)}
 .vlabel{font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;opacity:.8;margin-bottom:2px}
 .vtext{white-space:pre-line;font-size:.95rem}
 .visioncard .vedit{color:var(--green-ink);opacity:.85;margin-top:10px}
@@ -247,9 +248,7 @@ textarea.prompt.note{font-family:var(--sans);font-size:1rem;background:var(--sur
 .xopt{margin-top:16px}
 .xoptt{font-weight:600;font-size:.92rem;margin-bottom:8px}
 .xfile{font:inherit;font-size:.92rem;max-width:100%}
-.xerr{color:#b3261e}
-@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .xerr{color:#f2b8b5} }
-:root[data-theme="dark"] .xerr{color:#f2b8b5}
+.xerr{color:var(--gold);font-weight:500}
 /* Hub */
 .hubbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:-8px 0 22px;font-size:.88rem;color:var(--muted)}
 .hubbar .link{padding:4px 0}
@@ -278,7 +277,7 @@ textarea.prompt.note{font-family:var(--sans);font-size:1rem;background:var(--sur
 .mb{display:grid;grid-template-columns:1.4em 1fr 2em;gap:10px;align-items:center;font-size:.92rem}
 .mb .l{font-family:var(--serif);font-weight:700;color:var(--muted)}
 .mb .b{height:8px;background:var(--line-soft);border-radius:99px;overflow:hidden}
-.mb .b i{display:block;height:100%;background:var(--gold)}
+.mb .b i{display:block;height:100%;background:var(--tan)}
 .mb.top .l{color:var(--green)} .mb.top .b i{background:var(--green)}
 .mb .v{text-align:right;font-weight:600}
 .sumlist{margin:0;padding-left:1.3em}
@@ -563,7 +562,7 @@ textarea.prompt.note{font-family:var(--sans);font-size:1rem;background:var(--sur
     });
     // Fläche
     var poly=s.map(function(v,i){return pt(i,v).join(",");}).join(" ");
-    o+='<polygon points="'+poly+'" fill="var(--gold)" fill-opacity=".85" stroke="var(--gold)" stroke-width="2" stroke-linejoin="round"/>';
+    o+='<polygon points="'+poly+'" fill="var(--tan)" fill-opacity=".9" stroke="var(--gold)" stroke-width="2" stroke-linejoin="round"/>';
     // Quadranten-Rahmen
     o+='<rect x="'+(C-H)+'" y="'+(C-H)+'" width="'+(2*H)+'" height="'+(2*H)+'" fill="none" stroke="var(--line)" stroke-width="3"/>';
     o+='<line x1="'+C+'" y1="'+(C-H)+'" x2="'+C+'" y2="'+(C+H)+'" stroke="var(--line)" stroke-width="3"/>';
