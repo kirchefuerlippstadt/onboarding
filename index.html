@@ -263,7 +263,7 @@ textarea.prompt.note{font-family:var(--sans);font-size:1rem;background:var(--sur
 .modmeta{display:flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:.82rem;color:var(--muted);margin-top:6px}
 .pill{border-radius:99px;padding:3px 10px;font-weight:600;box-shadow:inset 0 0 0 1.5px var(--line-soft)}
 .pill.done{background:var(--green);color:var(--green-ink);box-shadow:none}
-.pill.progress{background:var(--gold-soft);box-shadow:none;color:var(--ink)}
+.pill.started{background:var(--gold-soft);box-shadow:none;color:var(--ink)}
 .modcard.final{background:var(--green);color:var(--green-ink)}
 .modcard.final .modnum{color:var(--green-ink)}
 .modcard.final .moddesc{color:var(--green-ink);opacity:.85}
@@ -1163,7 +1163,7 @@ textarea.prompt.note{font-family:var(--sans);font-size:1rem;background:var(--sur
     ];
     var all = st.disg==="done" && st.gaben==="done" && st.traum==="done";
     var html = mods.map(function(m){
-      return '<button class="modcard" data-open="'+m[0]+'"><span class="modnum">'+m[1]+'</span><span class="modbody"><span class="modtitle">'+m[2]+'</span><span class="moddesc">'+m[3]+'</span><span class="modmeta"><span class="pill '+m[5]+'">'+LABEL[m[5]]+(m[0]==="m-gaben"&&m[5]==="progress"?' · '+st.gCount+'/141':'')+'</span><span>'+m[4]+'</span></span></span></button>';
+      return '<button class="modcard" data-open="'+m[0]+'"><span class="modnum">'+m[1]+'</span><span class="modbody"><span class="modtitle">'+m[2]+'</span><span class="moddesc">'+m[3]+'</span><span class="modmeta"><span class="pill '+(m[5]==="progress"?"started":m[5])+'">'+LABEL[m[5]]+(m[0]==="m-gaben"&&m[5]==="progress"?' · '+st.gCount+'/141':'')+'</span><span>'+m[4]+'</span></span></span></button>';
     }).join("");
     html += '<button class="modcard final'+(all?'':' locked')+'" data-open="m-summary"><span class="modnum">✦</span><span class="modbody"><span class="modtitle">Gesamtergebnis</span><span class="moddesc">'+(all ? 'Alle Ergebnisse auf einen Blick – und dein ausführlicher Visionssatz.' : 'Wird freigeschaltet, sobald du alle drei Tests abgeschlossen hast.')+'</span></span></button>';
     el("modlist").innerHTML = html;
